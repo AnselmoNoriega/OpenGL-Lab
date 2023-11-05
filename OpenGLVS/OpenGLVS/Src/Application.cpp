@@ -7,8 +7,8 @@
 
 #define ASSERT(x) if (!(x)) __debugbreak();
 #define GLCall(x) GLCLearError();\
-	x;\
-	ASSERT(GLLogCall(#x, __FILE__, __LINE__))
+    x;\
+    ASSERT(GLLogCall(#x, __FILE__, __LINE__))
 
 static void GLCLearError()
 {
@@ -23,7 +23,7 @@ static bool GLLogCall(const char* function, const char* file, int line)
 			std::endl << file << ": " << line << std::endl;
 		return false;
 	}
-		return true;
+	return true;
 }
 
 struct ShaderProgramSource
@@ -50,7 +50,7 @@ static ShaderProgramSource ParseShader(const std::string& filepath)
 		{
 			if (line.find("#Vertex") != std::string::npos)
 				type = ShaderType::VERTEX;
-			else if(line.find("#Fragment") != std::string::npos)
+			else if (line.find("#Fragment") != std::string::npos)
 				type = ShaderType::FRAGMENT;
 		}
 		else
@@ -78,19 +78,19 @@ static unsigned int CompileShader(unsigned int type, const std::string& source)
 		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
 		char* message = (char*)alloca(length * sizeof(char));
 		glGetShaderInfoLog(id, length, &length, message);
-		std::cout << "Failed To Compile " 
-			      << (type == GL_VERTEX_SHADER ? "Vertex" : "Fragment")
-			      << " Shader" << std::endl;
+		std::cout << "Failed To Compile "
+			<< (type == GL_VERTEX_SHADER ? "Vertex" : "Fragment")
+			<< " Shader" << std::endl;
 		std::cout << message << std::endl;
 		glDeleteShader(id);
 	}
 
-	return id; 
+	return id;
 }
 
 static unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
 {
-	GLCall(unsigned int program = glCreateProgram()); 
+	GLCall(unsigned int program = glCreateProgram());
 	unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
 	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
 
@@ -111,7 +111,7 @@ int main(void)
 
 	if (!glfwInit())
 		return -1;
-	 
+
 	window = glfwCreateWindow(640, 480, "Graph Window", NULL, NULL);
 	if (!window)
 	{
@@ -120,6 +120,8 @@ int main(void)
 	}
 
 	glfwMakeContextCurrent(window);
+
+	glfwSwapInterval(10);
 
 	if (glewInit() != GLEW_OK)
 		std::cout << "Error" << std::endl;
@@ -136,7 +138,7 @@ int main(void)
 
 	unsigned int indices[] = {
 		0, 1, 2,
-	    2, 3, 0
+		2, 3, 0
 	};
 
 	unsigned int buffer;
@@ -156,11 +158,24 @@ int main(void)
 	unsigned int shader = CreateShader(source.VertexSource, source.FragmentSource);
 	GLCall(glUseProgram(shader));
 
+	int location = glGetUniformLocation(shader, "u_Color");
+	ASSERT(location != 1);
+	GLCall(glUniform4f(location, 1.0f, 0.0f, 0.0f, 1.0f));
+
+	float r = 1.0f;
+	float g = 1.0f;
+	float b = 1.0f;
+
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		GLCall(glUniform4f(location, r, g, b, 1.0f));
 		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+
+		r += r + 0.2f <= 1.0f ? 0.2 : -0.8f;
+		b += b + 0.4f <= 1.0f ? 0.4 : -6.0f;
+		g += g + 0.8f <= 1.0f ? 0.8 : -2.0f;
 
 		glfwSwapBuffers(window);
 
