@@ -133,10 +133,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\IndexBuffer.cpp" />
+    <ClCompile Include="Src\Renderer.cpp" />
     <ClCompile Include="Src\Application.cpp" />
+    <ClCompile Include="Src\VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\Shaders\Basic.shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Src\IndexBuffer.h" />
+    <ClInclude Include="Src\Renderer.h" />
+    <ClInclude Include="Src\VertexBuffer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
