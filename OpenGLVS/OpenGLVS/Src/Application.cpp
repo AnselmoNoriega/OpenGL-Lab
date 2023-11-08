@@ -132,7 +132,12 @@ int main(void)
 		GLCall(glGenVertexArrays(1, &vao));
 		GLCall(glBindVertexArray(vao));
 
+		VertexArray va;
 		VertexBuffer vb(vertsPos, 4 * 2 * sizeof(float));
+
+		BufferLayout layout;
+		layout.Push<float>(3);
+		va.AddLayout(layout);
 
 		GLCall(glEnableVertexAttribArray(0));
 		GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0));
@@ -164,6 +169,7 @@ int main(void)
 			GLCall(glUniform4f(location, r, g, b, 1.0f));
 
 			GLCall(glBindVertexArray(vao));
+			va.Bind();
 			ib.Bind();
 
 			GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
