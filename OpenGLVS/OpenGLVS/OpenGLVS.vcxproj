@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Shader.cpp" />
     <ClCompile Include="Src\IndexBuffer.cpp" />
     <ClCompile Include="Src\Renderer.cpp" />
     <ClCompile Include="Src\Application.cpp" />
@@ -145,6 +146,7 @@
     <None Include="Res\Shaders\Basic.shader" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Shader.h" />
     <ClInclude Include="Src\IndexBuffer.h" />
     <ClInclude Include="Src\Renderer.h" />
     <ClInclude Include="Src\VertexBuffer.h" />
