@@ -154,6 +154,7 @@
     <ClInclude Include="Src\Shader.h" />
     <ClInclude Include="Src\IndexBuffer.h" />
     <ClInclude Include="Src\Renderer.h" />
+    <ClInclude Include="Src\Vendor\stb_image\stb_image.h" />
     <ClInclude Include="Src\VertexBuffer.h" />
     <ClInclude Include="Src\VertexArray.h" />
     <ClInclude Include="Src\VertexBufferLayout.h" />
