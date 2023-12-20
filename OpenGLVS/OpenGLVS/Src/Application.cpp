@@ -21,34 +21,37 @@ int main(void)
 	GLFWwindow* window;
 
 	if (!glfwInit())
+	{
 		return -1;
+	}
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	window = glfwCreateWindow(640, 480, "Graph Window", NULL, NULL);
+	window = glfwCreateWindow(2160, 1920, "Graph Window", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
 		return -1;
 	}
-
 	glfwMakeContextCurrent(window);
 
 	glfwSwapInterval(10);
 
 	if (glewInit() != GLEW_OK)
+	{
 		std::cout << "Error" << std::endl;
+	}
 
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
 	{
 		float vertsPos[] = {
-			-0.5f, -0.5f, 0.0f, 0.0f,
-			 0.5f, -0.5f, 1.0f, 0.0f,
-			 0.5f,  0.5f, 1.0f, 1.0f,
-			-0.5f,  0.5f, 0.0f, 1.0f,
+			 20.0f, 10.0f, 0.0f, 0.0f,
+			 80.0f, 10.0f, 1.0f, 0.0f,
+			 80.0f, 65.0f, 1.0f, 1.0f,
+			 20.0f,  65.0f, 0.0f, 1.0f,
 		};
 
 		unsigned int indices[] = {
@@ -69,13 +72,17 @@ int main(void)
 
 		IndexBuffer ib(indices, 6);
 
-		glm::mat4 proj = glm::ortho(-1.0f, 1.0f, -0.75f, 0.75f, -1.0f, 1.0f);
+		glm::mat4 proj = glm::ortho(0.0f, 100.0f, 0.0f, 75.0f, -1.0f, 1.0f);
+		glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-10, 0, 0));
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(20, 20, 0));
+
+		glm::mat4 mvp = proj * view * model;
 
 		Shader shader("Res/Shaders/Basic.shader");
 		shader.Bind();
 
 		shader.SetUniform4f("u_Color", 1.0f, 0.0f, 0.0f, 1.0f);
-		shader.SetUniformMat4f("u_MVP", proj);
+		shader.SetUniformMat4f("u_MVP", mvp);
 
 		Texture texture("Res/Textures/Image1.jpg");
 		texture.Bind();
@@ -111,6 +118,7 @@ int main(void)
 		}
 	}
 
+	glfwDestroyWindow(window);
 	glfwTerminate();
 	return 0;
 }
