@@ -49,10 +49,10 @@ int main(void)
 
 	{
 		float vertsPos[] = {
-			 20.0f, 10.0f, 0.0f, 0.0f,
-			 80.0f, 10.0f, 1.0f, 0.0f,
-			 80.0f, 65.0f, 1.0f, 1.0f,
-			 20.0f,  65.0f, 0.0f, 1.0f,
+			 -100.0f,  100.0f, 0.0f, 1.0f,
+			  100.0f,  100.0f, 1.0f, 1.0f,
+			  100.0f, -100.0f, 1.0f, 0.0f,
+			 -100.0f, -100.0f, 0.0f, 0.0f,
 		};
 
 		unsigned int indices[] = {
@@ -73,8 +73,8 @@ int main(void)
 
 		IndexBuffer ib(indices, 6);
 
-		glm::mat4 proj = glm::ortho(0.0f, 100.0f, 0.0f, 75.0f, -1.0f, 1.0f);
-		glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-10, 0, 0));
+		glm::mat4 proj = glm::ortho(0.0f, 1000.0f, 0.0f, 750.0f, -1.0f, 1.0f);
+		glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
 
 		Shader shader("Res/Shaders/Basic.shader");
 		shader.Bind();
@@ -96,7 +96,8 @@ int main(void)
 		ImGui_ImplOpenGL3_Init("#version 330");
 		ImGui::StyleColorsDark();
 
-		glm::vec3 translation(20, 20, 0);
+		glm::vec3 translationA(0, 0, 0);
+		glm::vec3 translationB(500, 500, 0);
 
 		while (!glfwWindowShouldClose(window))
 		{
@@ -106,17 +107,23 @@ int main(void)
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
 
-
 			shader.Bind();
-			glm::mat4 model = glm::translate(glm::mat4(1.0f), translation);
-			glm::mat4 mvp = proj * view * model;
-			shader.SetUniformMat4f("u_MVP", mvp);
+
+			glm::mat4 modelA = glm::translate(glm::mat4(1.0f), translationA);
+			glm::mat4 mvpA = proj * view * modelA;
+			shader.SetUniformMat4f("u_MVP", mvpA);
+			renderer.Draw(va, ib, shader);
+
+			glm::mat4 modelB = glm::translate(glm::mat4(1.0f), translationB);
+			glm::mat4 mvpB = proj * view * modelB;
+			shader.SetUniformMat4f("u_MVP", mvpB);
 			renderer.Draw(va, ib, shader);
 
 			{
 				ImGui::Begin("My Window");
 
-				ImGui::SliderFloat3("Translation", &translation.x, 0.0f, 100.0f);
+				ImGui::SliderFloat3("Translation A", &translationA.x, 0.0f, 1000.0f);
+				ImGui::SliderFloat3("Translation B", &translationB.x, 0.0f, 1000.0f);
 
 				ImGui::Text("Application average %.3f ms/frame (%.1f)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 				ImGui::End();
