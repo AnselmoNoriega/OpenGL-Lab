@@ -5,6 +5,7 @@
 
 struct ShaderProgramSource
 {
+public:
 	std::string VertexSource;
 	std::string FragmentSource;
 };
@@ -12,9 +13,9 @@ struct ShaderProgramSource
 class Shader
 {
 private:
-	std::string m_FilePath;
-	unsigned int m_RendererID;
-	std::unordered_map<std::string, int> m_UniformLocationCache;
+	std::string mFilePath;
+	unsigned int mRendererID;
+	std::unordered_map<std::string, int> mUniformLocationCache;
 
 public:
 	Shader(const std::string& filePath);

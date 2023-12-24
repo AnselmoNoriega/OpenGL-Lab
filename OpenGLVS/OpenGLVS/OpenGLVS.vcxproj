@@ -76,7 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>Src\Vendor;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Src;Src\Vendor;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -155,6 +155,7 @@
     <ClCompile Include="Src\VertexArray.cpp" />
     <ClCompile Include="Src\VertexBuffer.cpp" />
     <ClCompile Include="Src\Texture.cpp" />
+    <ClCompile Include="Src\Test\TestClearColor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\Shaders\Basic.shader" />
@@ -163,6 +164,7 @@
     <ClInclude Include="Src\Shader.h" />
     <ClInclude Include="Src\IndexBuffer.h" />
     <ClInclude Include="Src\Renderer.h" />
+    <ClInclude Include="Src\Test\Test.h" />
     <ClInclude Include="Src\Vendor\ImGui\imconfig.h" />
     <ClInclude Include="Src\Vendor\ImGui\imgui.h" />
     <ClInclude Include="Src\Vendor\ImGui\imgui_impl_glfw.h" />
@@ -177,6 +179,7 @@
     <ClInclude Include="Src\VertexArray.h" />
     <ClInclude Include="Src\VertexBufferLayout.h" />
     <ClInclude Include="Src\Texture.h" />
+    <ClInclude Include="Src\Test\TestClearColor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
