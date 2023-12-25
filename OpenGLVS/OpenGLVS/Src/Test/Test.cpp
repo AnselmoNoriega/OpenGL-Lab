@@ -8,7 +8,10 @@ namespace test
 	{
 	}
 
-	TestMenu::~TestMenu() {}
+	TestMenu::~TestMenu()
+	{
+		mCurrentTest = nullptr;
+	}
 
 	void TestMenu::OnImGuiRender()
 	{
@@ -19,5 +22,9 @@ namespace test
 				mCurrentTest = test.second();
 			}
 		}
+	}
+	void TestMenu::Delete()
+	{
+		delete mCurrentTest;
 	}
 }

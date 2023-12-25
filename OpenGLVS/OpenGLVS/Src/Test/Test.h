@@ -30,6 +30,8 @@ namespace test
 			mTests.emplace(name, []() {return new T(); });
 		}
 
+		void Delete();
+
 	private:
 		Test*& mCurrentTest;
 		std::map<std::string, std::function<Test* ()>> mTests;

@@ -98,11 +98,14 @@ int main(void)
 			glfwPollEvents();
 		}
 
-		delete currentTest;
 		if (currentTest != tMenu)
 		{
+			tMenu->Delete();
 			delete tMenu;
+			tMenu = nullptr;
 		}
+		delete currentTest;
+		currentTest = nullptr;
 	}
 
 	glfwDestroyWindow(window);
