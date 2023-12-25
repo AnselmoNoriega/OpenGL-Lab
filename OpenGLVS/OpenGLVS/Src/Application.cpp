@@ -80,7 +80,7 @@ int main(void)
 				currentTest->OnUpdate(0);
 				currentTest->OnRender();
 				ImGui::Begin("Test");
-				if (currentTest != tMenu && ImGui::Button("<-"))
+				if (currentTest != tMenu && ImGui::Button("<- Back"))
 				{
 					delete currentTest;
 					currentTest = tMenu;
