@@ -145,6 +145,7 @@
     <ClCompile Include="Src\Renderer.cpp" />
     <ClCompile Include="Src\Application.cpp" />
     <ClCompile Include="Src\Test\Test.cpp" />
+    <ClCompile Include="Src\Test\TestTexture2D.cpp" />
     <ClCompile Include="Src\Vendor\ImGui\imgui.cpp" />
     <ClCompile Include="Src\Vendor\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Src\Vendor\ImGui\imgui_draw.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="Src\IndexBuffer.h" />
     <ClInclude Include="Src\Renderer.h" />
     <ClInclude Include="Src\Test\Test.h" />
+    <ClInclude Include="Src\Test\TestTexture2D.h" />
     <ClInclude Include="Src\Vendor\ImGui\imconfig.h" />
     <ClInclude Include="Src\Vendor\ImGui\imgui.h" />
     <ClInclude Include="Src\Vendor\ImGui\imgui_impl_glfw.h" />

@@ -1,12 +1,10 @@
 #pragma once
-#include "VertexBuffer.h"
 
 class VertexBufferLayout;
+class VertexBuffer;
 
 class VertexArray
 {
-private:
-	unsigned int mRendererID;
 public:
 	VertexArray();
 	~VertexArray();
@@ -15,4 +13,7 @@ public:
 
 	void Bind() const;
 	void Unbind() const;
+
+private:
+	unsigned int mRendererID;
 };

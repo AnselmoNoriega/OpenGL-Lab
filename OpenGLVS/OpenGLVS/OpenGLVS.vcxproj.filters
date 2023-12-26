@@ -66,6 +66,9 @@
     <ClCompile Include="Src\Test\Test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Test\TestTexture2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\Shaders\Basic.shader" />
@@ -126,6 +129,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\Test\TestClearColor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Test\TestTexture2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
