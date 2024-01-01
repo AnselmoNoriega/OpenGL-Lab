@@ -7,30 +7,30 @@
 #include "VertexBuffer.h"
 #include "ElementBuffer.h"
 
+GLfloat vertices[] =
+{
+	-0.5f, -0.5f, 0.0f,
+	 0.5f, -0.5f, 0.0f,
+	 0.0f,  0.5f, 0.0f,
+
+	 0.0f, -0.5f, 0.0f,
+	-0.25f, 0.0f, 0.0f,
+	 0.25f, 0.0f, 0.0f,
+};
+
+GLuint indices[] =
+{
+	0, 3, 4,
+	1, 3, 5,
+	2, 4, 5
+};
+
 int main()
 {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-	GLfloat vertices[] =
-	{
-		-0.5f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		 0.0f,  0.5f, 0.0f,
-
-		 0.0f, -0.5f, 0.0f,
-		-0.25f, 0.0f, 0.0f,
-		 0.25f, 0.0f, 0.0f,
-	};
-
-	GLuint indices[] =
-	{
-		0, 3, 4,
-		1, 3, 5,
-		2, 4, 5
-	};
 
 	std::pair<const unsigned int, const unsigned int> winSize(800, 800);
 	GLFWwindow* window = glfwCreateWindow(winSize.first, winSize.second, "Task Two", NULL, NULL);
@@ -46,7 +46,7 @@ int main()
 	glViewport(0, 0, winSize.first, winSize.second);
 	glClearColor(0.1f, 0.1f, 0.4f, 1.0f);
 
-	Shader shaderProgram("FragmentShader.shader", "VertexShader.shader");
+	Shader shaderProgram("VertexShader.shader", "FragmentShader.shader");
 
 	VertexArray vA;
 	vA.Bind();
