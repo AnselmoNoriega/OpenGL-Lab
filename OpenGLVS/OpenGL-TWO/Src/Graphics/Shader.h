@@ -6,11 +6,11 @@ class Shader
 public:
 	Shader(const char* vertFile, const char* fragFile);
 
-	void Start();
+	void UseProgram();
 	void Delete();
 
 private:
-	std::string ParseFile(const char* fileName);
+	const char* ParseFile(const char* fileName);
 
 	unsigned int _id;
 

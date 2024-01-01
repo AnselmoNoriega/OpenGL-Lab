@@ -85,6 +85,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)OpenGL-TWO\Src\Graphics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -117,6 +118,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)OpenGL-TWO\Src\Graphics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,11 +146,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Src\glad.c" />
+    <ClCompile Include="Src\Graphics\ElementBuffer.cpp" />
     <ClCompile Include="Src\Graphics\Shader.cpp" />
+    <ClCompile Include="Src\Graphics\VertexArray.cpp" />
     <ClCompile Include="Src\Main.cpp" />
+    <ClCompile Include="Src\Graphics\VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Graphics\ElementBuffer.h" />
     <ClInclude Include="Src\Graphics\Shader.h" />
+    <ClInclude Include="Src\Graphics\VertexArray.h" />
+    <ClInclude Include="Src\Graphics\VertexBuffer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
