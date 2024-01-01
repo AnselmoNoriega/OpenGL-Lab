@@ -55,6 +55,7 @@ int main()
 	ElementBuffer eB(indices, sizeof(indices));
 
 	vA.LinkVertexBuffer(vB, 0);
+
 	vA.Unbind();
 	vB.Unbind();
 	eB.Unbind();

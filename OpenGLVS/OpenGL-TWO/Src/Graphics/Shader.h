@@ -1,5 +1,5 @@
 #pragma once
-
+#include <string>
 
 class Shader
 {
@@ -10,7 +10,7 @@ public:
 	void Delete();
 
 private:
-	const char* ParseFile(const char* fileName);
+	std::string ParseFile(const char* fileName);
 
 	unsigned int _id;
 
