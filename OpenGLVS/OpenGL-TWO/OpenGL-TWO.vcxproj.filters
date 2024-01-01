@@ -13,5 +13,11 @@
     <ClCompile Include="Src\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Graphics\Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Src\Graphics\Shader.h" />
   </ItemGroup>
 </Project>
