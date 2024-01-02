@@ -25,11 +25,18 @@
     <ClCompile Include="Src\Graphics\VertexArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Tools\stb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Graphics\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Graphics\Shader.h" />
     <ClInclude Include="Src\Graphics\VertexBuffer.h" />
     <ClInclude Include="Src\Graphics\ElementBuffer.h" />
     <ClInclude Include="Src\Graphics\VertexArray.h" />
+    <ClInclude Include="Src\Graphics\Texture.h" />
   </ItemGroup>
 </Project>

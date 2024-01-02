@@ -151,12 +151,15 @@
     <ClCompile Include="Src\Graphics\VertexArray.cpp" />
     <ClCompile Include="Src\Main.cpp" />
     <ClCompile Include="Src\Graphics\VertexBuffer.cpp" />
+    <ClCompile Include="Src\Tools\stb.cpp" />
+    <ClCompile Include="Src\Graphics\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Graphics\ElementBuffer.h" />
     <ClInclude Include="Src\Graphics\Shader.h" />
     <ClInclude Include="Src\Graphics\VertexArray.h" />
     <ClInclude Include="Src\Graphics\VertexBuffer.h" />
+    <ClInclude Include="Src\Graphics\Texture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

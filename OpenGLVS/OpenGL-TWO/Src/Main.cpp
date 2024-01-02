@@ -6,23 +6,20 @@
 #include "VertexArray.h"
 #include "VertexBuffer.h"
 #include "ElementBuffer.h"
+#include "Texture.h"
 
 GLfloat vertices[] =
 {
-	-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-	 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-	 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
-
-	 0.0f, -0.5f, 0.0f, 0.8f, 0.3f, 0.3f,
-	-0.25f, 0.0f, 0.0f, 0.8f, 0.3f, 0.3f,
-	 0.25f, 0.0f, 0.0f, 0.8f, 0.3f, 0.3f
+	-0.5f, -0.5f, 0.0f,    1.0f, 0.0f, 0.0f,   0.0f, 0.0f,
+	 0.5f, -0.5f, 0.0f,    0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
+	 0.5f,  0.5f, 0.0f,    0.0f, 0.0f, 1.0f,   1.0f, 1.0f,
+	-0.5f,  0.5f, 0.0f,    0.5f, 0.5f, 0.5f,   0.0f, 1.0f
 };
 
 GLuint indices[] =
 {
-	0, 3, 4,
-	1, 3, 5,
-	2, 4, 5
+	0, 1, 2,
+	2, 3, 0,
 };
 
 int main()
@@ -54,32 +51,32 @@ int main()
 	VertexBuffer vB(vertices, sizeof(vertices));
 	ElementBuffer eB(indices, sizeof(indices));
 
-	vA.LinkVertexBuffer(vB, 0, 3, 6 * sizeof(float), (void*)0);
-	vA.LinkVertexBuffer(vB, 1, 3, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	vA.LinkVertexBuffer(vB, 0, 3, 8 * sizeof(float), (void*)0);
+	vA.LinkVertexBuffer(vB, 1, 3, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	vA.LinkVertexBuffer(vB, 2, 2, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
 	vA.Unbind();
 	vB.Unbind();
 	eB.Unbind();
 
-	unsigned int uniformID = glGetUniformLocation(shaderProgram.GetID(), "scale");
+	Texture texture("Res/Textures/Image_Two.png");
+	texture.TextureUnit(shaderProgram, "tex0", 0);
+	texture.Bind();
+	vA.Bind();
 
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
-		shaderProgram.UseProgram();
-		glUniform1f(uniformID, 1.0f);
-
-		vA.Bind();
-		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
-
 		glfwPollEvents();
 	}
 
 	vA.Delete();
 	vB.Delete();
 	eB.Delete();
+	texture.Delete();
 	shaderProgram.Delete();
 
 	glfwDestroyWindow(window);
