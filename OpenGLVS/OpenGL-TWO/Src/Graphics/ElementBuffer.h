@@ -3,7 +3,7 @@
 class ElementBuffer
 {
 public:
-	ElementBuffer(const unsigned int* indices, const unsigned int size);
+	ElementBuffer(unsigned int* indices, unsigned int size);
 
 	void Bind();
 	void Unbind();

@@ -1,7 +1,7 @@
 #include "ElementBuffer.h"
 #include <glad/glad.h>
 
-ElementBuffer::ElementBuffer(const unsigned int* indices, const unsigned int size)
+ElementBuffer::ElementBuffer(unsigned int* indices, unsigned int size)
 {
 	glGenBuffers(1, &_id);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _id);

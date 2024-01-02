@@ -7,10 +7,10 @@ VertexArray::VertexArray()
 	glGenVertexArrays(1, &_id);
 }
 
-void VertexArray::LinkVertexBuffer(VertexBuffer& vertexBuffer, const unsigned int layout)
+void VertexArray::LinkVertexBuffer(VertexBuffer& vertexBuffer, unsigned int layout, unsigned int vertSize, unsigned int stride, void* offset)
 {
 	vertexBuffer.Bind();
-	glVertexAttribPointer(layout, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glVertexAttribPointer(layout, vertSize, GL_FLOAT, GL_FALSE, stride, offset);
 	glEnableVertexAttribArray(layout);
 	vertexBuffer.Unbind();
 }

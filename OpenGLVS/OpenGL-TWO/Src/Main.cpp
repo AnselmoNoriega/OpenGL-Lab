@@ -9,13 +9,13 @@
 
 GLfloat vertices[] =
 {
-	-0.5f, -0.5f, 0.0f,
-	 0.5f, -0.5f, 0.0f,
-	 0.0f,  0.5f, 0.0f,
+	-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+	 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+	 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
 
-	 0.0f, -0.5f, 0.0f,
-	-0.25f, 0.0f, 0.0f,
-	 0.25f, 0.0f, 0.0f,
+	 0.0f, -0.5f, 0.0f, 0.8f, 0.3f, 0.3f,
+	-0.25f, 0.0f, 0.0f, 0.8f, 0.3f, 0.3f,
+	 0.25f, 0.0f, 0.0f, 0.8f, 0.3f, 0.3f
 };
 
 GLuint indices[] =
@@ -54,17 +54,21 @@ int main()
 	VertexBuffer vB(vertices, sizeof(vertices));
 	ElementBuffer eB(indices, sizeof(indices));
 
-	vA.LinkVertexBuffer(vB, 0);
+	vA.LinkVertexBuffer(vB, 0, 3, 6 * sizeof(float), (void*)0);
+	vA.LinkVertexBuffer(vB, 1, 3, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
 	vA.Unbind();
 	vB.Unbind();
 	eB.Unbind();
 
+	unsigned int uniformID = glGetUniformLocation(shaderProgram.GetID(), "scale");
+
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
-
 		shaderProgram.UseProgram();
+		glUniform1f(uniformID, 1.0f);
+
 		vA.Bind();
 		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
 
