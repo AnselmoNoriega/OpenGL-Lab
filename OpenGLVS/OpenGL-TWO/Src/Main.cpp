@@ -16,13 +16,19 @@ GLfloat vertices[] =
 	-0.5f, -0.5f, 0.0f,    1.0f, 0.0f, 0.0f,   0.0f, 0.0f,
 	 0.5f, -0.5f, 0.0f,    0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
 	 0.5f,  0.5f, 0.0f,    0.0f, 0.0f, 1.0f,   1.0f, 1.0f,
-	-0.5f,  0.5f, 0.0f,    0.5f, 0.5f, 0.5f,   0.0f, 1.0f
+	-0.5f,  0.5f, 0.0f,    0.5f, 0.5f, 0.5f,   0.0f, 1.0f,
+
+	 0.5f, -0.5f, -0.5f,    0.0f, 1.0f, 0.0f,   2.0f, 0.0f,
+	 0.5f,  0.5f, -0.5f,    0.0f, 0.0f, 1.0f,   2.0f, 1.0f
 };
 
 GLuint indices[] =
 {
 	0, 1, 2,
 	2, 3, 0,
+
+	1, 2, 4,
+	4, 5, 2,
 };
 
 int main()
@@ -65,22 +71,37 @@ int main()
 	Texture texture("Res/Textures/Image_Two.png");
 	texture.TextureUnit(shaderProgram, "tex0", 0);
 
-	shaderProgram.UseProgram();
-	glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)(winSize.first/ winSize.second), 0.1f, 100.0f);
-	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -0.5f, -2.0f));
+	glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)(winSize.first / winSize.second), 0.1f, 100.0f);
+	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -2.0f));
 	glm::mat4 model = glm::mat4(1.0f);
 	glm::mat4 MVP = proj * view * model;
+	float rotation = 0.0f;
+	float time = glfwGetTime();
 
-	int MVP_ID = glGetUniformLocation(shaderProgram.GetID(), "_mvp");
-	glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, glm::value_ptr(MVP));
-
-	texture.Bind();
-	vA.Bind();
+	glEnable(GL_DEPTH_TEST);
 
 	while (!glfwWindowShouldClose(window))
 	{
-		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		if (glfwGetTime() - time > 0.05f)
+		{
+			time = glfwGetTime();
+			rotation += 0.75f;
+		}
+
+		shaderProgram.UseProgram();
+		model = glm::mat4(1.0f);
+		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
+		MVP = proj * view * model;
+
+		int MVP_ID = glGetUniformLocation(shaderProgram.GetID(), "_mvp");
+		glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, glm::value_ptr(MVP));
+
+		texture.Bind();
+		vA.Bind();
+
+		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
