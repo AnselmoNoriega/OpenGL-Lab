@@ -9,12 +9,19 @@ class Camera
 public:
 	Camera(int width, int height, glm::vec3 position);
 	
-	void Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform);
+	void Update();
 	void Inputs(GLFWwindow* window);
+
+	void SetMatrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform);
 
 private:
 	glm::vec3 mPos;
 	glm::vec3 mOrientation = glm::vec3(0.0f, 0.0f, -1.0f);
+
+	glm::mat4 mView;
+	glm::mat4 mProjection;
+
+	unsigned int MVP_ID;
 
 	int mWidth;
 	int mHeight;

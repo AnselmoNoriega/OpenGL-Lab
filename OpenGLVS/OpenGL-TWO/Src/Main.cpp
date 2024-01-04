@@ -75,7 +75,8 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	Camera camera(winSize.first, winSize.second, glm::vec3(0.0f, 0.0f, 2.0f));
-
+	camera.SetMatrix(45.0f, 0.1f, 100.0f, shaderProgram, "_mvp");
+	
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -83,7 +84,7 @@ int main()
 		shaderProgram.UseProgram();
 
 		camera.Inputs(window);
-		camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "_mvp");
+		camera.Update();
 
 		texture.Bind();
 		vA.Bind();

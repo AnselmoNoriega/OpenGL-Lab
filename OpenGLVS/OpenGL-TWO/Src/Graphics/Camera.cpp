@@ -11,55 +11,54 @@ Camera::Camera(int width, int height, glm::vec3 position) :
 {
 }
 
-void Camera::Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform)
+void Camera::Update()
 {
-	glm::mat4 view = glm::mat4(1.0f);
-	glm::mat4 projection = glm::mat4(1.0f);
-
-	view = glm::lookAt(mPos, mPos + mOrientation, up);
-	projection = glm::perspective(glm::radians(FOVdeg), (float)(mWidth / mHeight), nearPlane, farPlane);
-
-	int MVP_ID = glGetUniformLocation(shader.GetID(), uniform);
-	glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, glm::value_ptr(projection * view));
+	glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, glm::value_ptr(mProjection * mView));
 }
 
 void Camera::Inputs(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		mPos += mSpeed * mOrientation;
+		mPos += mSpeed * up;
+		mView = glm::lookAt(mPos, mPos + mOrientation, up);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
 		mPos += mSpeed * (-glm::normalize(glm::cross(mOrientation, up)));
+		mView = glm::lookAt(mPos, mPos + mOrientation, up);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		mPos += mSpeed * (-mOrientation);
+		mPos += mSpeed * (-up);
+		mView = glm::lookAt(mPos, mPos + mOrientation, up);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
 		mPos += mSpeed * glm::normalize(glm::cross(mOrientation, up));
+		mView = glm::lookAt(mPos, mPos + mOrientation, up);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
-		mPos += mSpeed * up;
+		mPos += mSpeed * mOrientation;
+		mView = glm::lookAt(mPos, mPos + mOrientation, up);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
 	{
-		mPos += mSpeed * (-up);
+		mPos += mSpeed * (-mOrientation);
+		mView = glm::lookAt(mPos, mPos + mOrientation, up);
 	}
 
-	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+	if (mSpeed != 0.4f && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 	{
 		mSpeed = 0.4;
 	}
-	else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
+	else if (mSpeed != 0.1f && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
 	{
 		mSpeed = 0.1;
 	}
@@ -72,6 +71,7 @@ void Camera::Inputs(GLFWwindow* window)
 		{
 			glfwSetCursorPos(window, (mWidth / 2), (mHeight / 2));
 			firstClick = false;
+			return;
 		}
 
 		double mousePosX;
@@ -82,17 +82,28 @@ void Camera::Inputs(GLFWwindow* window)
 		float rotY = mSensitivity * (float)(mousePosX - (mWidth / 2)) / mWidth;
 
 		glm::vec3 newOrientation = glm::rotate(mOrientation, glm::radians(-rotX), glm::normalize(glm::cross(mOrientation, up)));
-		if (!(glm::angle(newOrientation, up) <= glm::radians(5.0f) or glm::angle(newOrientation, -up) <= glm::radians(5.0f)))
+		if (!(glm::angle(newOrientation, up) <= glm::radians(10.0f) or glm::angle(newOrientation, -up) <= glm::radians(10.0f)))
 		{
 			mOrientation = newOrientation;
 		}
 
 		mOrientation = glm::rotate(mOrientation, glm::radians(-rotY), up);
+		mView = glm::lookAt(mPos, mPos + mOrientation, up);
+
 		glfwSetCursorPos(window, (mWidth / 2), (mHeight / 2));
 	}
-	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
+	else if (!firstClick && glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
 	{
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		firstClick = true;
 	}
+}
+
+void Camera::SetMatrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform)
+{
+	mView = glm::lookAt(mPos, mPos + mOrientation, up);
+	mProjection = glm::perspective(glm::radians(FOVdeg), (float)(mWidth / mHeight), nearPlane, farPlane);
+
+	MVP_ID = glGetUniformLocation(shader.GetID(), uniform);
+	glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, glm::value_ptr(mProjection * mView));
 }
