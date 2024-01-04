@@ -10,6 +10,7 @@
 #include "VertexBuffer.h"
 #include "ElementBuffer.h"
 #include "Texture.h"
+#include "Camera.h"
 
 GLfloat vertices[] =
 {
@@ -71,32 +72,18 @@ int main()
 	Texture texture("Res/Textures/Image_Two.png");
 	texture.TextureUnit(shaderProgram, "tex0", 0);
 
-	glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)(winSize.first / winSize.second), 0.1f, 100.0f);
-	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -2.0f));
-	glm::mat4 model = glm::mat4(1.0f);
-	glm::mat4 MVP = proj * view * model;
-	float rotation = 0.0f;
-	float time = glfwGetTime();
-
 	glEnable(GL_DEPTH_TEST);
+
+	Camera camera(winSize.first, winSize.second, glm::vec3(0.0f, 0.0f, 2.0f));
 
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		if (glfwGetTime() - time > 0.05f)
-		{
-			time = glfwGetTime();
-			rotation += 0.75f;
-		}
-
 		shaderProgram.UseProgram();
-		model = glm::mat4(1.0f);
-		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
-		MVP = proj * view * model;
 
-		int MVP_ID = glGetUniformLocation(shaderProgram.GetID(), "_mvp");
-		glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, glm::value_ptr(MVP));
+		camera.Inputs(window);
+		camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "_mvp");
 
 		texture.Bind();
 		vA.Bind();

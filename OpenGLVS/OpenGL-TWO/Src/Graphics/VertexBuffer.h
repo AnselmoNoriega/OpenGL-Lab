@@ -10,6 +10,6 @@ public:
 	void Delete();
 
 private:
-	unsigned int _id;
+	unsigned int mID;
 };
 

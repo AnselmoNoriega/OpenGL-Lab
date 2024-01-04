@@ -4,7 +4,7 @@
 
 VertexArray::VertexArray()
 {
-	glGenVertexArrays(1, &_id);
+	glGenVertexArrays(1, &mID);
 }
 
 void VertexArray::LinkVertexBuffer(VertexBuffer& vertexBuffer, unsigned int layout, unsigned int vertSize, unsigned int stride, void* offset)
@@ -17,7 +17,7 @@ void VertexArray::LinkVertexBuffer(VertexBuffer& vertexBuffer, unsigned int layo
 
 void VertexArray::Bind()
 {
-	glBindVertexArray(_id);
+	glBindVertexArray(mID);
 }
 
 void VertexArray::Unbind()
@@ -27,5 +27,5 @@ void VertexArray::Unbind()
 
 void VertexArray::Delete()
 {
-	glDeleteVertexArrays(1, &_id);
+	glDeleteVertexArrays(1, &mID);
 }

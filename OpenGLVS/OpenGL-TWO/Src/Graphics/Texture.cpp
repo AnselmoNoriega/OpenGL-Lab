@@ -10,9 +10,9 @@ Texture::Texture(const char* image)
 	stbi_set_flip_vertically_on_load(true);
 	unsigned char* imgBytes = stbi_load(image, &widthImg, &heightImg, &colorChannelNum, 0);
 
-	glGenTextures(1, &_id);
+	glGenTextures(1, &mID);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, _id);
+	glBindTexture(GL_TEXTURE_2D, mID);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -38,7 +38,7 @@ void Texture::TextureUnit(Shader& shader, const char* uniform, unsigned int unit
 
 void Texture::Bind()
 {
-	glBindTexture(GL_TEXTURE_2D, _id);
+	glBindTexture(GL_TEXTURE_2D, mID);
 }
 
 void Texture::Unbind()
@@ -48,5 +48,5 @@ void Texture::Unbind()
 
 void Texture::Delete()
 {
-	glDeleteTextures(1, &_id);
+	glDeleteTextures(1, &mID);
 }
