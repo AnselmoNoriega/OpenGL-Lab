@@ -33,14 +33,14 @@ Shader::Shader(const char* vertFile, const char* fragFile)
 	glDeleteShader(fragmentShader);
 }
 
+Shader::~Shader()
+{
+	glDeleteProgram(mID);
+}
+
 void Shader::UseProgram()
 {
 	glUseProgram(mID);
-}
-
-void Shader::Delete()
-{
-	glDeleteProgram(mID);
 }
 
 unsigned int Shader::GetID()

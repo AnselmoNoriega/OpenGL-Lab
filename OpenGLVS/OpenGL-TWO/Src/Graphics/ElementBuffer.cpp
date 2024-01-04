@@ -8,6 +8,11 @@ ElementBuffer::ElementBuffer(unsigned int* indices, unsigned int size)
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
 }
 
+ElementBuffer::~ElementBuffer()
+{
+	glDeleteBuffers(1, &mID);
+}
+
 void ElementBuffer::Bind()
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mID);
@@ -16,9 +21,4 @@ void ElementBuffer::Bind()
 void ElementBuffer::Unbind()
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-}
-
-void ElementBuffer::Delete()
-{
-	glDeleteBuffers(1, &mID);
 }

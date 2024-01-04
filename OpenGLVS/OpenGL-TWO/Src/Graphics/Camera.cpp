@@ -11,16 +11,16 @@ Camera::Camera(int width, int height, glm::vec3 position) :
 {
 }
 
-void Camera::Update()
+void Camera::Update(Shader& shader, const char* uniform)
 {
-	glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, glm::value_ptr(mProjection * mView));
+	glUniformMatrix4fv(glGetUniformLocation(shader.GetID(), uniform), 1, GL_FALSE, glm::value_ptr(mProjection * mView));
 }
 
 void Camera::Inputs(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		mPos += mSpeed * up;
+		mPos += mSpeed * mOrientation;
 		mView = glm::lookAt(mPos, mPos + mOrientation, up);
 	}
 
@@ -32,7 +32,7 @@ void Camera::Inputs(GLFWwindow* window)
 
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		mPos += mSpeed * (-up);
+		mPos += mSpeed * (-mOrientation);
 		mView = glm::lookAt(mPos, mPos + mOrientation, up);
 	}
 
@@ -44,13 +44,13 @@ void Camera::Inputs(GLFWwindow* window)
 
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
-		mPos += mSpeed * mOrientation;
+		mPos += mSpeed * up;
 		mView = glm::lookAt(mPos, mPos + mOrientation, up);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
 	{
-		mPos += mSpeed * (-mOrientation);
+		mPos += mSpeed * (-up);
 		mView = glm::lookAt(mPos, mPos + mOrientation, up);
 	}
 
@@ -105,5 +105,4 @@ void Camera::SetMatrix(float FOVdeg, float nearPlane, float farPlane, Shader& sh
 	mProjection = glm::perspective(glm::radians(FOVdeg), (float)(mWidth / mHeight), nearPlane, farPlane);
 
 	MVP_ID = glGetUniformLocation(shader.GetID(), uniform);
-	glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, glm::value_ptr(mProjection * mView));
 }

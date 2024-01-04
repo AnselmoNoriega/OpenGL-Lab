@@ -5,9 +5,9 @@ class Shader
 {
 public:
 	Shader(const char* vertFile, const char* fragFile);
+	~Shader();
 
 	void UseProgram();
-	void Delete();
 
 	unsigned int GetID();
 

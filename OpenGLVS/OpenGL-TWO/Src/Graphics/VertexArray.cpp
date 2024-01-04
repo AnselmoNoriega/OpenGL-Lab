@@ -7,6 +7,11 @@ VertexArray::VertexArray()
 	glGenVertexArrays(1, &mID);
 }
 
+VertexArray::~VertexArray()
+{
+	glDeleteVertexArrays(1, &mID);
+}
+
 void VertexArray::LinkVertexBuffer(VertexBuffer& vertexBuffer, unsigned int layout, unsigned int vertSize, unsigned int stride, void* offset)
 {
 	vertexBuffer.Bind();
@@ -23,9 +28,4 @@ void VertexArray::Bind()
 void VertexArray::Unbind()
 {
 	glBindVertexArray(0);
-}
-
-void VertexArray::Delete()
-{
-	glDeleteVertexArrays(1, &mID);
 }
