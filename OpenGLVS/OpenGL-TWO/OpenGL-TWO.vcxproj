@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Graphics\Mesh.cpp" />
     <ClCompile Include="Src\Graphics\Camera.cpp" />
     <ClCompile Include="Src\glad.c" />
     <ClCompile Include="Src\Graphics\ElementBuffer.cpp" />
@@ -156,6 +157,7 @@
     <ClCompile Include="Src\Graphics\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Graphics\Mesh.h" />
     <ClInclude Include="Src\Graphics\Camera.h" />
     <ClInclude Include="Src\Graphics\ElementBuffer.h" />
     <ClInclude Include="Src\Graphics\Shader.h" />

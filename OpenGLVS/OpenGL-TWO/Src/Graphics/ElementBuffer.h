@@ -1,9 +1,10 @@
 #pragma once
+#include <vector>
 
 class ElementBuffer
 {
 public:
-	ElementBuffer(unsigned int* indices, unsigned int size);
+	ElementBuffer(std::vector<unsigned int>& indices);
 	~ElementBuffer();
 
 	void Bind();

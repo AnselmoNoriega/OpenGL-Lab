@@ -5,10 +5,10 @@ layout(location = 0) in vec3 _pos;
 layout(location = 1) in vec3 _color;
 out vec3 shapeColor;
 
-layout(location = 2) in vec2 _texture2D;
-out vec2 textureCoord;
+layout(location = 2) in vec3 _normal;
 
-layout(location = 3) in vec3 _normal;
+layout(location = 3) in vec2 _texture2D;
+out vec2 textureCoord;
 
 out vec3 normal;
 out vec3 crntPos;

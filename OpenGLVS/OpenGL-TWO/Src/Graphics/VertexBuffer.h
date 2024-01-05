@@ -1,9 +1,20 @@
 #pragma once
+#include <glm/glm.hpp>
+#include <vector>
+
+struct Vertex
+{
+public:
+	glm::vec3 Position = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 Color = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 Normal = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec2 TextUV = glm::vec2(0.0f, 0.0f);
+};
 
 class VertexBuffer
 {
 public:
-	VertexBuffer(const float* vertices, const unsigned int size);
+	VertexBuffer(std::vector<Vertex>& vertices);
 	~VertexBuffer();
 
 	void Bind();
