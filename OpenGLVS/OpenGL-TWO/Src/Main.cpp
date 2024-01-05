@@ -36,10 +36,10 @@ GLuint indices[] =
 
 GLfloat lightVertices[] =
 {
-	 0.0f,  0.0f, -3.0f,
-	 1.0f,  0.0f, -2.0f,
-	 1.0f,  1.0f, -2.0f,
-	 0.0f,  1.0f, -3.0f,
+	-1.0f, -0.5f, 1.0f,
+	 0.0f, -0.5f, 1.0f,
+	 0.0f,  0.5f, 1.0f,
+	-1.0f,  0.5f, 1.0f,
 };
 
 GLuint lightIndices[] =
@@ -102,7 +102,7 @@ int main()
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-	glm::vec3 lightPos = glm::vec3(0.5f, 0.0f, 0.25f);
+	glm::vec3 lightPos = glm::vec3(-0.5f, 0.0f, 1.0f);
 	glm::vec3 objectPos = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::mat4 lightModel = glm::translate(glm::mat4(1.0f), lightPos);
 	glm::mat4 objectModel = glm::translate(glm::mat4(1.0f), objectPos);
@@ -115,9 +115,9 @@ int main()
 	glUniform4f(glGetUniformLocation(shaderProgram.GetID(), "_lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram.GetID(), "_lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
-	Texture texture("Res/Textures/Rock.png", 0, GL_RGBA);
+	Texture texture("Res/Textures/Image_Two.png", 0, GL_RGB);
 	texture.TextureUnit(shaderProgram, "tex0", 0);
-	Texture specTexture("Res/Textures/RockOC.png", 1, GL_RED);
+	Texture specTexture("Res/Textures/planksSpec.png", 1, GL_RED);
 	specTexture.TextureUnit(shaderProgram, "tex1", 1);
 
 	glEnable(GL_DEPTH_TEST);
