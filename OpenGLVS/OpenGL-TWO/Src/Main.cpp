@@ -115,8 +115,10 @@ int main()
 	glUniform4f(glGetUniformLocation(shaderProgram.GetID(), "_lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram.GetID(), "_lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
-	Texture texture("Res/Textures/Image_Two.png", 0);
+	Texture texture("Res/Textures/Rock.png", 0, GL_RGBA);
 	texture.TextureUnit(shaderProgram, "tex0", 0);
+	Texture specTexture("Res/Textures/RockOC.png", 1, GL_RED);
+	specTexture.TextureUnit(shaderProgram, "tex1", 1);
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -128,12 +130,12 @@ int main()
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		shaderProgram.UseProgram();
 		camera.Inputs(window);
+		shaderProgram.UseProgram();
 		glUniform3f(glGetUniformLocation(shaderProgram.GetID(), "_camPos"), camera.GetPos().x, camera.GetPos().y, camera.GetPos().z);
-
 		camera.Update(shaderProgram, "_mvp");
 		texture.Bind();
+		specTexture.Bind();
 		vA.Bind();
 		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
 

@@ -4,7 +4,7 @@
 
 #include "Shader.h"
 
-Texture::Texture(const char* image, unsigned int unit)
+Texture::Texture(const char* image, unsigned int unit, unsigned int format)
 {
 	int widthImg, heightImg, colorChannelNum;
 	stbi_set_flip_vertically_on_load(true);
@@ -23,7 +23,7 @@ Texture::Texture(const char* image, unsigned int unit)
 	//float tempColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
 	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, tempColor);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthImg, heightImg, 0, GL_RGB, GL_UNSIGNED_BYTE, imgBytes);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthImg, heightImg, 0, format, GL_UNSIGNED_BYTE, imgBytes);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	stbi_image_free(imgBytes);
