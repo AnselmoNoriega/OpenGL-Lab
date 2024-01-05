@@ -13,8 +13,53 @@ uniform vec4 _lightColor;
 uniform vec3 _lightPos;
 uniform vec3 _camPos;
 
-void main()
+vec4 PointLight()
 {
+    vec3 lightVec = _lightPos - crntPos;
+    float dist = length(lightVec);
+    float a = 0.05f;
+    float b = 0.01f;
+    float inten = 1.0f / (a * dist * dist + b * dist + 1);
+
+    float ambient = 0.2f;
+
+    vec3 myNormal = normalize(normal);
+    vec3 lightDir = normalize(lightVec);
+
+    float diffuse = max(dot(myNormal, lightDir), 0.0f);
+
+    float specularLight = 0.5f;
+    vec3 viewDirection = normalize(_camPos - crntPos);
+    vec3 reflectionDir = reflect(-lightDir, myNormal);
+    float specAmount = pow(max(dot(viewDirection, reflectionDir), 0.0f), 16);
+    float specular = specAmount * specularLight;
+
+    return (texture(tex0, textureCoord) * (diffuse * inten + ambient) + texture(tex1, textureCoord).r * specular * inten) * _lightColor;
+}
+
+vec4 DirectLight()
+{
+    float ambient = 0.2f;
+
+    vec3 myNormal = normalize(normal);
+    vec3 lightDir = normalize(vec3(1.0f, 1.0f, 1.0f));
+
+    float diffuse = max(dot(myNormal, lightDir), 0.0f);
+
+    float specularLight = 0.5f;
+    vec3 viewDirection = normalize(_camPos - crntPos);
+    vec3 reflectionDir = reflect(-lightDir, myNormal);
+    float specAmount = pow(max(dot(viewDirection, reflectionDir), 0.0f), 16);
+    float specular = specAmount * specularLight;
+
+    return (texture(tex0, textureCoord) * (diffuse + ambient) + texture(tex1, textureCoord).r * specular) * _lightColor;
+}
+
+vec4 SpotLight()
+{
+    float outerCone = 0.9f;
+    float innerCone = 1.0f;
+
     float ambient = 0.2f;
 
     vec3 myNormal = normalize(normal);
@@ -28,5 +73,13 @@ void main()
     float specAmount = pow(max(dot(viewDirection, reflectionDir), 0.0f), 16);
     float specular = specAmount * specularLight;
 
-    color = texture(tex0, textureCoord) * _lightColor * (diffuse + ambient) + texture(tex1, textureCoord).r * specular;
+    float angle = dot(vec3(0.0f, 0.0f, -1.0f), - lightDir);
+    float inten = clamp((angle - outerCone) / (innerCone - outerCone), 0.0f, 1.0f);
+
+    return (texture(tex0, textureCoord) * (diffuse * inten + ambient) + texture(tex1, textureCoord).r * specular * inten) * _lightColor;
+}
+
+void main()
+{
+    color = SpotLight();
 }
