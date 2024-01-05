@@ -14,6 +14,8 @@ public:
 
 	void SetMatrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform);
 
+	glm::vec3 GetPos();
+
 private:
 	glm::vec3 mPos;
 	glm::vec3 mOrientation = glm::vec3(0.0f, 0.0f, -1.0f);

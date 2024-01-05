@@ -10,6 +10,7 @@ in vec3 crntPos;
 uniform sampler2D tex0;
 uniform vec4 _lightColor;
 uniform vec3 _lightPos;
+uniform vec3 _camPos;
 
 void main()
 {
@@ -20,5 +21,11 @@ void main()
 
     float diffuse = max(dot(myNormal, lightDir), 0.0f);
 
-    color = texture(tex0, textureCoord) * _lightColor * (diffuse + ambient);
+    float specularLight = 0.5f;
+    vec3 viewDirection = normalize(_camPos - crntPos);
+    vec3 reflectionDir = reflect(-lightDir, myNormal);
+    float specAmount = pow(max(dot(viewDirection, reflectionDir), 0.0f), 8);
+    float specular = specAmount * specularLight;
+
+    color = texture(tex0, textureCoord) * _lightColor * (diffuse + ambient + specular);
 }

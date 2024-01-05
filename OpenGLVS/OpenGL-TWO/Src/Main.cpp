@@ -21,8 +21,8 @@ GLfloat vertices[] =
 
 	 0.5f, -0.5f, 0.0f,    0.0f, 1.0f, 0.0f,   1.0f, 0.0f,	 1.0f, 0.0f, 0.0f,
 	 0.5f,  0.5f, 0.0f,    0.0f, 0.0f, 1.0f,   1.0f, 1.0f,	 1.0f, 0.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f,   0.0f, 0.0f, 1.0f,   2.0f, 1.0f,   1.0f, 0.0f, 0.0f,
-	 0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 0.0f,   2.0f, 0.0f,   1.0f, 0.0f, 0.0f
+	 0.5f,  0.5f, 0.5f,    0.0f, 0.0f, 1.0f,   2.0f, 1.0f,   1.0f, 0.0f, 0.0f,
+	 0.5f, -0.5f, 0.5f,    0.0f, 1.0f, 0.0f,   2.0f, 0.0f,   1.0f, 0.0f, 0.0f
 };
 
 GLuint indices[] =
@@ -102,9 +102,9 @@ int main()
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
-	glm::mat4 lightModel = glm::translate(glm::mat4(1.0f), lightPos);
+	glm::vec3 lightPos = glm::vec3(0.5f, 0.0f, 0.25f);
 	glm::vec3 objectPos = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::mat4 lightModel = glm::translate(glm::mat4(1.0f), lightPos);
 	glm::mat4 objectModel = glm::translate(glm::mat4(1.0f), objectPos);
 
 	lightShader.UseProgram();
@@ -115,7 +115,7 @@ int main()
 	glUniform4f(glGetUniformLocation(shaderProgram.GetID(), "_lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram.GetID(), "_lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
-	Texture texture("Res/Textures/Image_Two.png");
+	Texture texture("Res/Textures/Image_Two.png", 0);
 	texture.TextureUnit(shaderProgram, "tex0", 0);
 
 	glEnable(GL_DEPTH_TEST);
@@ -130,13 +130,14 @@ int main()
 
 		shaderProgram.UseProgram();
 		camera.Inputs(window);
+		glUniform3f(glGetUniformLocation(shaderProgram.GetID(), "_camPos"), camera.GetPos().x, camera.GetPos().y, camera.GetPos().z);
+
 		camera.Update(shaderProgram, "_mvp");
 		texture.Bind();
 		vA.Bind();
 		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
 
 		lightShader.UseProgram();
-		camera.Inputs(window);
 		camera.Update(lightShader, "_mvp");
 		lightVA.Bind();
 		glDrawElements(GL_TRIANGLES, sizeof(lightIndices) / sizeof(int), GL_UNSIGNED_INT, 0);

@@ -106,3 +106,8 @@ void Camera::SetMatrix(float FOVdeg, float nearPlane, float farPlane, Shader& sh
 
 	MVP_ID = glGetUniformLocation(shader.GetID(), uniform);
 }
+
+glm::vec3 Camera::GetPos()
+{
+	return mPos;
+}

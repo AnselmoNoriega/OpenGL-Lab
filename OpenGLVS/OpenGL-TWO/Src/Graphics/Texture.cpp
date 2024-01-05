@@ -4,14 +4,15 @@
 
 #include "Shader.h"
 
-Texture::Texture(const char* image)
+Texture::Texture(const char* image, unsigned int unit)
 {
 	int widthImg, heightImg, colorChannelNum;
 	stbi_set_flip_vertically_on_load(true);
 	unsigned char* imgBytes = stbi_load(image, &widthImg, &heightImg, &colorChannelNum, 0);
 
 	glGenTextures(1, &mID);
-	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE0 + unit);
+	mUnit = unit;
 	glBindTexture(GL_TEXTURE_2D, mID);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -43,6 +44,7 @@ void Texture::TextureUnit(Shader& shader, const char* uniform, unsigned int unit
 
 void Texture::Bind()
 {
+	glActiveTexture(GL_TEXTURE0 + mUnit);
 	glBindTexture(GL_TEXTURE_2D, mID);
 }
 
