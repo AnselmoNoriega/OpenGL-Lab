@@ -4,8 +4,10 @@
 
 #include "Shader.h"
 
-Texture::Texture(const char* image, unsigned int unit, unsigned int format)
+Texture::Texture(const char* image, const char* texType, unsigned int unit, unsigned int format)
 {
+	mTexType = texType;
+
 	int widthImg, heightImg, colorChannelNum;
 	stbi_set_flip_vertically_on_load(true);
 	unsigned char* imgBytes = stbi_load(image, &widthImg, &heightImg, &colorChannelNum, 0);

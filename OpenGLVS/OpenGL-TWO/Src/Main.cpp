@@ -5,24 +5,21 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Mesh.h"
 #include "Shader.h"
-#include "VertexArray.h"
-#include "VertexBuffer.h"
-#include "ElementBuffer.h"
-#include "Texture.h"
 #include "Camera.h"
 
-GLfloat vertices[] =
+Vertex vertices[] =
 {
-	-0.5f, -0.5f, 0.0f,    1.0f, 0.0f, 0.0f,   0.0f, 0.0f,   0.0f, 0.0f, 1.0f,
-	 0.5f, -0.5f, 0.0f,    0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   0.0f, 0.0f, 1.0f,
-	 0.5f,  0.5f, 0.0f,    0.0f, 0.0f, 1.0f,   1.0f, 1.0f,   0.0f, 0.0f, 1.0f,
-	-0.5f,  0.5f, 0.0f,    0.5f, 0.5f, 0.5f,   0.0f, 1.0f,   0.0f, 0.0f, 1.0f,
+	Vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 0.0f)),
+	Vertex(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 0.0f)),
+	Vertex(glm::vec3(0.5f,  0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 1.0f)),
+	Vertex(glm::vec3(-0.5f,  0.5f, 0.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 1.0f)),
 
-	 0.5f, -0.5f, 0.0f,    0.0f, 1.0f, 0.0f,   1.0f, 0.0f,	 1.0f, 0.0f, 0.0f,
-	 0.5f,  0.5f, 0.0f,    0.0f, 0.0f, 1.0f,   1.0f, 1.0f,	 1.0f, 0.0f, 0.0f,
-	 0.5f,  0.5f, 0.5f,    0.0f, 0.0f, 1.0f,   2.0f, 1.0f,   1.0f, 0.0f, 0.0f,
-	 0.5f, -0.5f, 0.5f,    0.0f, 1.0f, 0.0f,   2.0f, 0.0f,   1.0f, 0.0f, 0.0f
+	Vertex(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)),
+	Vertex(glm::vec3(0.5f,  0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f)),
+	Vertex(glm::vec3(0.5f,  0.5f, 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(2.0f, 1.0f)),
+	Vertex(glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(2.0f, 0.0f))
 };
 
 GLuint indices[] =
@@ -34,12 +31,12 @@ GLuint indices[] =
 	6, 7, 4,
 };
 
-GLfloat lightVertices[] =
+Vertex lightVertices[] =
 {
-	-1.0f, -0.5f, 1.0f,
-	 0.0f, -0.5f, 1.0f,
-	 0.0f,  0.5f, 1.0f,
-	-1.0f,  0.5f, 1.0f,
+	Vertex(glm::vec3(-1.0f, -0.5f, 1.0f)),
+	Vertex(glm::vec3(0.0f, -0.5f, 1.0f)),
+	Vertex(glm::vec3(0.0f,  0.5f, 1.0f)),
+	Vertex(glm::vec3(-1.0f,  0.5f, 1.0f))
 };
 
 GLuint lightIndices[] =
@@ -69,36 +66,22 @@ int main()
 	glViewport(0, 0, winSize.first, winSize.second);
 	glClearColor(0.1f, 0.1f, 0.4f, 1.0f);
 
+	Texture textures[]
+	{
+		Texture("Res/Textures/Image_Two.png", "diffuse", 0, GL_RGB),
+	    Texture("Res/Textures/planksSpec.png", "specular", 1, GL_RED)
+	};
+
 	Shader shaderProgram("VertexShader.shader", "FragmentShader.shader");
+	std::vector<Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
+	std::vector<GLuint> indcs(indices, indices + sizeof(indices) / sizeof(GLuint));
+	std::vector<Texture> texs(textures, textures + sizeof(textures) / sizeof(Texture));
+	Mesh mesh(verts, indcs, texs);
 
-	VertexArray vA;
-	vA.Bind();
-
-	VertexBuffer vB(vertices, sizeof(vertices));
-	ElementBuffer eB(indices, sizeof(indices));
-
-	vA.LinkVertexBuffer(vB, 0, 3, 11 * sizeof(float), (void*)0);
-	vA.LinkVertexBuffer(vB, 1, 3, 11 * sizeof(float), (void*)(3 * sizeof(float)));
-	vA.LinkVertexBuffer(vB, 2, 2, 11 * sizeof(float), (void*)(6 * sizeof(float)));
-	vA.LinkVertexBuffer(vB, 3, 3, 11 * sizeof(float), (void*)(8 * sizeof(float)));
-
-	vA.Unbind();
-	vB.Unbind();
-	eB.Unbind();
-
-	Shader lightShader("LightVertex.shader", "LightFragment.shader");
-
-	VertexArray lightVA;
-	lightVA.Bind();
-
-	VertexBuffer lightVB(lightVertices, sizeof(lightVertices));
-	ElementBuffer lightEB(lightIndices, sizeof(lightIndices));
-
-	lightVA.LinkVertexBuffer(lightVB, 0, 3, 3 * sizeof(float), (void*)0);
-
-	lightVA.Unbind();
-	lightVB.Unbind();
-	lightEB.Unbind();
+	Shader lightShader("LightVertex.shader", "LightFragment.shader"); 
+	std::vector<Vertex> lightVerts(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertex));
+	std::vector<GLuint> lightIndcs(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
+	Mesh light(lightVerts, lightIndcs, texs);
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -115,34 +98,22 @@ int main()
 	glUniform4f(glGetUniformLocation(shaderProgram.GetID(), "_lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram.GetID(), "_lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
-	Texture texture("Res/Textures/Image_Two.png", 0, GL_RGB);
-	texture.TextureUnit(shaderProgram, "tex0", 0);
-	Texture specTexture("Res/Textures/planksSpec.png", 1, GL_RED);
-	specTexture.TextureUnit(shaderProgram, "tex1", 1);
+
 
 	glEnable(GL_DEPTH_TEST);
 
 	Camera camera(winSize.first, winSize.second, glm::vec3(0.0f, 0.0f, 2.0f));
 	camera.SetMatrix(45.0f, 0.1f, 100.0f, shaderProgram, "_mvp");
 	camera.SetMatrix(45.0f, 0.1f, 100.0f, lightShader, "_mvp");
-	
+
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		camera.Inputs(window);
-		shaderProgram.UseProgram();
-		glUniform3f(glGetUniformLocation(shaderProgram.GetID(), "_camPos"), camera.GetPos().x, camera.GetPos().y, camera.GetPos().z);
-		camera.Update(shaderProgram, "_mvp");
-		texture.Bind();
-		specTexture.Bind();
-		vA.Bind();
-		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
 
-		lightShader.UseProgram();
-		camera.Update(lightShader, "_mvp");
-		lightVA.Bind();
-		glDrawElements(GL_TRIANGLES, sizeof(lightIndices) / sizeof(int), GL_UNSIGNED_INT, 0);
+		mesh.Draw(shaderProgram, camera);
+		light.Draw(lightShader, camera);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
