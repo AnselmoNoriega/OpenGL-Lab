@@ -19,39 +19,43 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, st
 	mVertexArray.LinkVertexBuffer(vB, 1, 3, sizeof(Vertex), (void*)(offsetof(Vertex, Color)));
 	mVertexArray.LinkVertexBuffer(vB, 2, 3, sizeof(Vertex), (void*)(offsetof(Vertex, Normal)));
 	mVertexArray.LinkVertexBuffer(vB, 3, 2, sizeof(Vertex), (void*)(offsetof(Vertex, TextUV)));
-	
+
 	mVertexArray.Unbind();
 	vB.Unbind();
 	eB.Unbind();
 }
 
-void Mesh::Draw(Shader& shader, Camera& camera)
+void Mesh::Draw(Shader& shader, Camera& camera, bool isLightShader)
 {
 	shader.UseProgram();
 	mVertexArray.Bind();
 
-	unsigned int diffNum = 0;
-	unsigned int specNum = 0;
-
-	for (size_t i = 0; i < mTextures.size(); ++i)
+	if (!isLightShader)
 	{
-		std::string num;
-		std::string texType = mTextures[i].GetTextureType();
+		unsigned int diffNum = 0;
+		unsigned int specNum = 0;
 
-		if (texType == "diffuce")
+		for (size_t i = 0; i < mTextures.size(); ++i)
 		{
-			num = std::to_string(diffNum++);
-		}
-		else if (texType == "specular")
-		{
-			num = std::to_string(specNum++);
+			std::string num;
+			std::string texType = mTextures[i].GetTextureType();
+
+			if (texType == "diffuce")
+			{
+				num = std::to_string(diffNum++);
+			}
+			else if (texType == "specular")
+			{
+				num = std::to_string(specNum++);
+			}
+
+			mTextures[i].TextureUnit(shader, (texType + num).c_str(), i);
+			mTextures[i].Bind();
 		}
 
-		mTextures[i].TextureUnit(shader, (texType + num).c_str(), i);
-		mTextures[i].Bind();
+		glUniform3f(UniformHandler::GetUniformLocation(shader.GetID(), "_camPos"), camera.GetPos().x, camera.GetPos().y, camera.GetPos().z);
 	}
 
-	glUniform3f(UniformHandler::GetUniformLocation(shader.GetID(), "_camPos"), camera.GetPos().x, camera.GetPos().y, camera.GetPos().z);
 	camera.Update(shader, "_mvp");
 
 	glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);

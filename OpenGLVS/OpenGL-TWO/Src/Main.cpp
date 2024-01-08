@@ -69,7 +69,7 @@ int main()
 
 	Texture textures[]
 	{
-		Texture("Res/Textures/Image_Two.png", "diffuse", 0, GL_RGB),
+		Texture("Res/Textures/Image_Two.png", "diffuce", 0, GL_RGB),
 	    Texture("Res/Textures/planksSpec.png", "specular", 1, GL_RED)
 	};
 
@@ -112,7 +112,7 @@ int main()
 		camera.Inputs(window);
 
 		mesh.Draw(shaderProgram, camera);
-		light.Draw(lightShader, camera);
+		light.Draw(lightShader, camera, true);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

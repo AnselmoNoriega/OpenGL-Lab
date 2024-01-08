@@ -2,16 +2,16 @@
 #include <iostream>
 #include <glad/glad.h>
 
-std::unordered_map<unsigned int, std::unordered_map<const char*, unsigned int>> UniformHandler::mUniformLocationCache;
+std::unordered_map<unsigned int, std::unordered_map<std::string, unsigned int>> UniformHandler::mUniformLocationCache;
 
-unsigned int UniformHandler::GetUniformLocation(unsigned int shaderID, const char* name)
+unsigned int UniformHandler::GetUniformLocation(unsigned int shaderID, std::string name)
 {
 	if (mUniformLocationCache[shaderID].find(name) != UniformHandler::mUniformLocationCache[shaderID].end())
 	{
 		return mUniformLocationCache[shaderID][name];
 	}
 
-	int location = glGetUniformLocation(shaderID, name);
+	int location = glGetUniformLocation(shaderID, name.c_str());
 
 	if (location == -1)
 	{

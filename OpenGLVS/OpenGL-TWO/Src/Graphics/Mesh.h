@@ -10,7 +10,7 @@ class Mesh
 public:
 	Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, std::vector<Texture>& textures);
 
-	void Draw(Shader& shader, Camera& camera);
+	void Draw(Shader& shader, Camera& camera, bool isLightShader = false);
 
 private:
 	std::vector <Vertex> mVertices;
