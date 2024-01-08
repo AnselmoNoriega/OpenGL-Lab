@@ -2,6 +2,7 @@
 #include "ElementBuffer.h"
 #include "Shader.h"
 #include "Camera.h"
+#include "UniformHandler.h"
 
 Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, std::vector<Texture>& textures)
 {
@@ -50,7 +51,7 @@ void Mesh::Draw(Shader& shader, Camera& camera)
 		mTextures[i].Bind();
 	}
 
-	glUniform3f(glGetUniformLocation(shader.GetID(), "_camPos"), camera.GetPos().x, camera.GetPos().y, camera.GetPos().z);
+	glUniform3f(UniformHandler::GetUniformLocation(shader.GetID(), "_camPos"), camera.GetPos().x, camera.GetPos().y, camera.GetPos().z);
 	camera.Update(shader, "_mvp");
 
 	glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);

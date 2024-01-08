@@ -1,10 +1,12 @@
 #include "Camera.h"
-#include "Shader.h"
 #include <glad/glad.h>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/vector_angle.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <GLFW/glfw3.h>
+
+#include "Shader.h"
+#include "UniformHandler.h"
 
 Camera::Camera(int width, int height, glm::vec3 position) :
 	mWidth(width), mHeight(height), mPos(position)
@@ -13,7 +15,7 @@ Camera::Camera(int width, int height, glm::vec3 position) :
 
 void Camera::Update(Shader& shader, const char* uniform)
 {
-	glUniformMatrix4fv(glGetUniformLocation(shader.GetID(), uniform), 1, GL_FALSE, glm::value_ptr(mProjection * mView));
+	glUniformMatrix4fv(UniformHandler::GetUniformLocation(shader.GetID(), uniform), 1, GL_FALSE, glm::value_ptr(mProjection * mView));
 }
 
 void Camera::Inputs(GLFWwindow* window)
@@ -104,7 +106,7 @@ void Camera::SetMatrix(float FOVdeg, float nearPlane, float farPlane, Shader& sh
 	mView = glm::lookAt(mPos, mPos + mOrientation, up);
 	mProjection = glm::perspective(glm::radians(FOVdeg), (float)(mWidth / mHeight), nearPlane, farPlane);
 
-	MVP_ID = glGetUniformLocation(shader.GetID(), uniform);
+	MVP_ID = UniformHandler::GetUniformLocation(shader.GetID(), uniform);
 }
 
 glm::vec3 Camera::GetPos()

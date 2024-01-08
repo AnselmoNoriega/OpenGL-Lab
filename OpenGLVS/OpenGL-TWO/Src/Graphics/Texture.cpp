@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 
 #include "Shader.h"
+#include "UniformHandler.h"
 
 Texture::Texture(const char* image, const char* texType, unsigned int unit, unsigned int format)
 {
@@ -39,9 +40,8 @@ Texture::~Texture()
 
 void Texture::TextureUnit(Shader& shader, const char* uniform, unsigned int unit)
 {
-	GLuint tex0ID = glGetUniformLocation(shader.GetID(), uniform);
 	shader.UseProgram();
-	glUniform1i(tex0ID, unit);
+	glUniform1i(UniformHandler::GetUniformLocation(shader.GetID(), uniform), unit);
 }
 
 void Texture::Bind()

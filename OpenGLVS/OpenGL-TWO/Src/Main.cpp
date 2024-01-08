@@ -8,6 +8,7 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "Camera.h"
+#include "UniformHandler.h"
 
 Vertex vertices[] =
 {
@@ -91,14 +92,12 @@ int main()
 	glm::mat4 objectModel = glm::translate(glm::mat4(1.0f), objectPos);
 
 	lightShader.UseProgram();
-	glUniformMatrix4fv(glGetUniformLocation(lightShader.GetID(), "_model"), 1, GL_FALSE, glm::value_ptr(lightModel));
-	glUniform4f(glGetUniformLocation(lightShader.GetID(), "_lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	glUniformMatrix4fv(UniformHandler::GetUniformLocation(lightShader.GetID(), "_model"), 1, GL_FALSE, glm::value_ptr(lightModel));
+	glUniform4f(UniformHandler::GetUniformLocation(lightShader.GetID(), "_lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	shaderProgram.UseProgram();
-	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.GetID(), "_model"), 1, GL_FALSE, glm::value_ptr(objectModel));
-	glUniform4f(glGetUniformLocation(shaderProgram.GetID(), "_lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	glUniform3f(glGetUniformLocation(shaderProgram.GetID(), "_lightPos"), lightPos.x, lightPos.y, lightPos.z);
-
-
+	glUniformMatrix4fv(UniformHandler::GetUniformLocation(shaderProgram.GetID(), "_model"), 1, GL_FALSE, glm::value_ptr(objectModel));
+	glUniform4f(UniformHandler::GetUniformLocation(shaderProgram.GetID(), "_lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	glUniform3f(UniformHandler::GetUniformLocation(shaderProgram.GetID(), "_lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
 	glEnable(GL_DEPTH_TEST);
 

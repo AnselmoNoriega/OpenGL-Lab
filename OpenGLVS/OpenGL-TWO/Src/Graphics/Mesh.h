@@ -18,5 +18,7 @@ private:
 	std::vector <Texture> mTextures;
 
 	VertexArray mVertexArray;
+
+	unsigned int mCamID;
 };
 

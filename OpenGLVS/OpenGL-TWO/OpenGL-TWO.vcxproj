@@ -93,7 +93,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)OpenGL-TWO\Src\Graphics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)OpenGL-TWO\Src\Tools;$(SolutionDir)OpenGL-TWO\Src\Graphics;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -111,6 +111,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)OpenGL-TWO\Src\Tools;$(SolutionDir)OpenGL-TWO\Src\Graphics;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,7 +128,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)OpenGL-TWO\Src\Graphics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)OpenGL-TWO\Src\Tools;$(SolutionDir)OpenGL-TWO\Src\Graphics;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,6 +146,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)OpenGL-TWO\Src\Tools;$(SolutionDir)OpenGL-TWO\Src\Graphics;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -165,6 +167,7 @@
     <ClCompile Include="Src\Graphics\VertexBuffer.cpp" />
     <ClCompile Include="Src\Tools\stb.cpp" />
     <ClCompile Include="Src\Graphics\Texture.cpp" />
+    <ClCompile Include="Src\Tools\UniformHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Graphics\Mesh.h" />
@@ -174,6 +177,7 @@
     <ClInclude Include="Src\Graphics\VertexArray.h" />
     <ClInclude Include="Src\Graphics\VertexBuffer.h" />
     <ClInclude Include="Src\Graphics\Texture.h" />
+    <ClInclude Include="Src\Tools\UniformHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
