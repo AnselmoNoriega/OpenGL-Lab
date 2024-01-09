@@ -40,6 +40,9 @@
     <ClCompile Include="Src\Tools\UniformHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Tools\Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Graphics\Shader.h" />
@@ -50,5 +53,6 @@
     <ClInclude Include="Src\Graphics\Camera.h" />
     <ClInclude Include="Src\Graphics\Mesh.h" />
     <ClInclude Include="Src\Tools\UniformHandler.h" />
+    <ClInclude Include="Src\Tools\Model.h" />
   </ItemGroup>
 </Project>

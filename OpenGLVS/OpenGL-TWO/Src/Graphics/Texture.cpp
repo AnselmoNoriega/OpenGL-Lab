@@ -1,11 +1,12 @@
 #include "Texture.h"
+#include <iostream>
 #include <stb/stb_image.h>
 #include <glad/glad.h>
 
 #include "Shader.h"
 #include "UniformHandler.h"
 
-Texture::Texture(const char* image, const char* texType, unsigned int unit, unsigned int format)
+Texture::Texture(const char* image, const char* texType, unsigned int unit)
 {
 	mTexType = texType;
 
@@ -25,8 +26,23 @@ Texture::Texture(const char* image, const char* texType, unsigned int unit, unsi
 
 	//float tempColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
 	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, tempColor);
+	if (colorChannelNum == 4)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthImg, heightImg, 0, GL_RGBA, GL_UNSIGNED_BYTE, imgBytes);
+	}
+	else if (colorChannelNum == 3)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthImg, heightImg, 0, GL_RGB, GL_UNSIGNED_BYTE, imgBytes);
+	}
+	else if (colorChannelNum == 1)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthImg, heightImg, 0, GL_RED, GL_UNSIGNED_BYTE, imgBytes);
+	}
+	else
+	{
+		std::invalid_argument("Texture Type: Recognition Error");
+	}
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthImg, heightImg, 0, format, GL_UNSIGNED_BYTE, imgBytes);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	stbi_image_free(imgBytes);

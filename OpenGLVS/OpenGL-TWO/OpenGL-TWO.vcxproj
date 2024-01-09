@@ -165,6 +165,7 @@
     <ClCompile Include="Src\Graphics\VertexArray.cpp" />
     <ClCompile Include="Src\Main.cpp" />
     <ClCompile Include="Src\Graphics\VertexBuffer.cpp" />
+    <ClCompile Include="Src\Tools\Model.cpp" />
     <ClCompile Include="Src\Tools\stb.cpp" />
     <ClCompile Include="Src\Graphics\Texture.cpp" />
     <ClCompile Include="Src\Tools\UniformHandler.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="Src\Graphics\VertexArray.h" />
     <ClInclude Include="Src\Graphics\VertexBuffer.h" />
     <ClInclude Include="Src\Graphics\Texture.h" />
+    <ClInclude Include="Src\Tools\Model.h" />
     <ClInclude Include="Src\Tools\UniformHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -6,7 +6,7 @@ class Shader;
 class Texture
 {
 public:
-	Texture(const char* image,const char* texType, unsigned int unit, unsigned int format);
+	Texture(const char* image,const char* texType, unsigned int unit);
 	~Texture();
 
 	void TextureUnit(Shader& shader, const char* uniform, unsigned int unit);
