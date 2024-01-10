@@ -42,7 +42,7 @@ vec4 DirectLight()
     float ambient = 0.2f;
 
     vec3 myNormal = normalize(normal);
-    vec3 lightDir = normalize(vec3(1.0f, 1.0f, 1.0f));
+    vec3 lightDir = normalize(vec3(1.0f, 1.0f, 0.0f));
 
     float diffuse = max(dot(myNormal, lightDir), 0.0f);
 
@@ -81,5 +81,5 @@ vec4 SpotLight()
 
 void main()
 {
-    color = SpotLight();
+    color = DirectLight();
 }

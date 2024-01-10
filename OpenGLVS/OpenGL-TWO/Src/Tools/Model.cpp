@@ -34,7 +34,7 @@ void Model::LoadMesh(unsigned int meshInd)
 	std::vector<float> texVec = GetFloats(mJson["accessors"][texAccInd]);
 	std::vector<glm::vec2> texUVs = GroupFloatsVec2(texVec);
 
-	std::vector<Vertex> vertices = AsssembleVertices(positions, normals, texUVs);
+	std::vector<Vertex> vertices = AssembleVertices(positions, normals, texUVs);
 	std::vector<unsigned int> indices = GetIndices(mJson["accessors"][indAccInd]);
 	std::vector<Texture> textures = GetTextures();
 
@@ -230,7 +230,7 @@ std::vector<Texture> Model::GetTextures()
 	std::vector<Texture> textures;
 
 	std::string fileStr = std::string(mFile);
-	std::string fileDirectory = fileStr.substr(0, fileStr.find_last_of('/') + 1);
+	std::string fileDirectory = "Res/Models/";
 
 	for (unsigned int i = 0; i < mJson["images"].size(); ++i)
 	{
@@ -251,6 +251,7 @@ std::vector<Texture> Model::GetTextures()
 		{
 			if (texPath.find("baseColor") != std::string::npos)
 			{
+				auto t = (fileDirectory + texPath).c_str();
 				Texture diffuce = Texture((fileDirectory + texPath).c_str(), "diffuce", mLoadedTex.size());
 				textures.push_back(diffuce);
 				mLoadedTex.push_back(diffuce);
@@ -269,7 +270,7 @@ std::vector<Texture> Model::GetTextures()
 	return textures;
 }
 
-std::vector<Vertex> Model::AsssembleVertices
+std::vector<Vertex> Model::AssembleVertices
 (
 	std::vector<glm::vec3> positions,
 	std::vector<glm::vec3> normals,

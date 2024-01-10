@@ -20,10 +20,10 @@ uniform mat4 scale;
 
 void main()
 {
-    crntPos = vec3(_model * translation * (-rotation) * scale * vec4(_pos, 1.0f));
+    crntPos = vec3(_model * translation * -rotation * scale * vec4(_pos, 1.0f));
     shapeColor = _color;
     normal = _normal;
     textureCoord = mat2(0.0, -1.0, 1.0, 0.0) * _texture2D;
 
-    gl_Position = _mvp * _model * vec4(crntPos, 1.0);
+    gl_Position = _mvp * vec4(crntPos, 1.0);
 };

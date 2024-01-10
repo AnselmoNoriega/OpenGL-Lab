@@ -18,7 +18,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	std::pair<const unsigned int, const unsigned int> winSize(800, 800);
+	std::pair<const unsigned int, const unsigned int> winSize(1000, 1000);
 	GLFWwindow* window = glfwCreateWindow(winSize.first, winSize.second, "Task Two", NULL, NULL);
 	if (window == nullptr)
 	{
@@ -36,13 +36,10 @@ int main()
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-	glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, 1.0f);
-	glm::vec3 objectPos = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
 	glm::mat4 lightModel = glm::translate(glm::mat4(1.0f), lightPos);
-	glm::mat4 objectModel = glm::translate(glm::mat4(1.0f), objectPos);
 
 	shaderProgram.UseProgram();
-	glUniformMatrix4fv(UniformHandler::GetUniformLocation(shaderProgram.GetID(), "_model"), 1, GL_FALSE, glm::value_ptr(objectModel));
 	glUniform4f(UniformHandler::GetUniformLocation(shaderProgram.GetID(), "_lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(UniformHandler::GetUniformLocation(shaderProgram.GetID(), "_lightPos"), lightPos.x, lightPos.y, lightPos.z);
 

@@ -39,7 +39,7 @@ private:
 	std::vector<unsigned int> GetIndices(json accessor);
 	std::vector<Texture> GetTextures();
 
-	std::vector<Vertex> AsssembleVertices
+	std::vector<Vertex> AssembleVertices
 	(
 		std::vector<glm::vec3> positions,
 		std::vector<glm::vec3> normals,
