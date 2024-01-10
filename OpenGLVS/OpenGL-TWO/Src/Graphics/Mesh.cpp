@@ -25,7 +25,16 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, st
 	eB.Unbind();
 }
 
-void Mesh::Draw(Shader& shader, Camera& camera, bool isLightShader)
+void Mesh::Draw
+(
+	Shader& shader,
+	Camera& camera,
+	glm::mat4 matrix,
+	glm::vec3 translation,
+	glm::quat rotation,
+	glm::vec3 scale,
+	bool isLightShader
+)
 {
 	shader.UseProgram();
 	mVertexArray.Bind();
@@ -57,6 +66,15 @@ void Mesh::Draw(Shader& shader, Camera& camera, bool isLightShader)
 	}
 
 	camera.Update(shader, "_mvp");
+
+	glm::mat4 trans = glm::translate(glm::mat4(1.0f), translation);
+	glm::mat4 rot = glm::mat4_cast(rotation);
+	glm::mat4 sca = glm::scale(glm::mat4(1.0f), scale);
+
+	glUniformMatrix4fv(UniformHandler::GetUniformLocation(shader.GetID(), "translation"), 1, GL_FALSE, glm::value_ptr(trans));
+	glUniformMatrix4fv(UniformHandler::GetUniformLocation(shader.GetID(), "rotation"), 1, GL_FALSE, glm::value_ptr(rot));
+	glUniformMatrix4fv(UniformHandler::GetUniformLocation(shader.GetID(), "scale"), 1, GL_FALSE, glm::value_ptr(sca));
+	glUniformMatrix4fv(UniformHandler::GetUniformLocation(shader.GetID(), "_model"), 1, GL_FALSE, glm::value_ptr(matrix));
 
 	glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);
 }

@@ -9,10 +9,108 @@ Model::Model(const char* file)
 
 	mFile = file;
 	mData = GetData();
+	TraverseNode(0);
 }
 
 void Model::Draw(Shader& shader, Camera& camera)
 {
+	for (unsigned int i = 0; i < mMeshes.size(); ++i)
+	{
+		mMeshes[i].Mesh::Draw(shader, camera, mMatricesMeshes[i]);
+	}
+}
+
+void Model::LoadMesh(unsigned int meshInd)
+{
+	unsigned int posAccInd = mJson["meshes"][meshInd]["primitives"][0]["attributes"]["POSITION"];
+	unsigned int normalAccInd = mJson["meshes"][meshInd]["primitives"][0]["attributes"]["NORMAL"];
+	unsigned int texAccInd = mJson["meshes"][meshInd]["primitives"][0]["attributes"]["TEXCOORD_0"];
+	unsigned int indAccInd = mJson["meshes"][meshInd]["primitives"][0]["indices"];
+
+	std::vector<float> posVec = GetFloats(mJson["accessors"][posAccInd]);
+	std::vector<glm::vec3> positions = GroupFloatsVec3(posVec);
+	std::vector<float> normalsVec = GetFloats(mJson["accessors"][normalAccInd]);
+	std::vector<glm::vec3> normals = GroupFloatsVec3(normalsVec);
+	std::vector<float> texVec = GetFloats(mJson["accessors"][texAccInd]);
+	std::vector<glm::vec2> texUVs = GroupFloatsVec2(texVec);
+
+	std::vector<Vertex> vertices = AsssembleVertices(positions, normals, texUVs);
+	std::vector<unsigned int> indices = GetIndices(mJson["accessors"][indAccInd]);
+	std::vector<Texture> textures = GetTextures();
+
+	mMeshes.push_back(Mesh(vertices, indices, textures));
+}
+
+void Model::TraverseNode(unsigned int nextNode, glm::mat4 matrix)
+{
+	json node = mJson["nodes"][nextNode];
+
+	glm::vec3 translation = glm::vec3(0.0f, 0.0f, 0.0f);
+	if (node.find("translation") != node.end())
+	{
+		float transValues[3];
+		for (unsigned int i = 0; i < node["translation"].size(); ++i)
+		{
+			transValues[i] = (node["translation"][i]);
+		}
+		translation = glm::make_vec3(transValues);
+	}
+	glm::quat rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+	if (node.find("rotation") != node.end())
+	{
+		float rotValues[4] =
+		{
+			node["rotation"][3],
+			node["rotation"][0],
+			node["rotation"][1],
+			node["rotation"][2]
+		};
+		rotation = glm::make_quat(rotValues);
+	}
+	glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
+	if (node.find("scale") != node.end())
+	{
+		float scaleValues[3];
+		for (unsigned int i = 0; i < node["scale"].size(); ++i)
+		{
+			scaleValues[i] = (node["matrix"][i]);
+		}
+		scale = glm::make_vec3(scaleValues);
+	}
+	glm::mat4 matNode = glm::mat4(1.0f);
+	if (node.find("matrix") != node.end())
+	{
+		float matValues[3];
+		for (unsigned int i = 0; i < node["matrix"].size(); ++i)
+		{
+			matValues[i] = (node["matrix"][i]);
+		}
+		matNode = glm::make_mat4(matValues);
+	}
+
+	glm::mat4 trans = glm::translate(glm::mat4(1.0f), translation);
+	glm::mat4 rot = glm::mat4_cast(rotation);
+	glm::mat4 sca = glm::scale(glm::mat4(1.0f), scale);
+
+	glm::mat4 matNextNode = matrix * matNode * trans * rot * sca;
+
+	if (node.find("mesh") != node.end())
+	{
+		mTranslationsMeshes.push_back(translation);
+		mRotationsMeshes.push_back(rotation);
+		mScalesMeshes.push_back(scale);
+		mMatricesMeshes.push_back(matNextNode);
+
+		LoadMesh(node["mesh"]);
+	}
+
+	if (node.find("children") != node.end())
+	{
+		for (unsigned int i = 0; i < node["children"].size(); ++i)
+		{
+			TraverseNode(node["children"][i], matNextNode);
+		}
+	}
 }
 
 std::vector<unsigned char> Model::GetData()
@@ -175,7 +273,7 @@ std::vector<Vertex> Model::AsssembleVertices
 (
 	std::vector<glm::vec3> positions,
 	std::vector<glm::vec3> normals,
-	std::vector<glm::vec3> texUVs
+	std::vector<glm::vec2> texUVs
 )
 {
 	std::vector<Vertex> vertices;
@@ -227,7 +325,7 @@ std::vector<glm::vec4> Model::GroupFloatsVec4(std::vector<float> floatVec)
 
 std::string Model::ParseFile(const char* fileName)
 {
-	std::string path = std::string("Res/Shaders/") + fileName;
+	std::string path = std::string("Res/Models/") + fileName;
 	std::ifstream in(path, std::ios::binary);
 	if (in)
 	{
