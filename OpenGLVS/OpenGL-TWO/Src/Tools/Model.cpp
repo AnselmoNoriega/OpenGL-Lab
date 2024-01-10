@@ -80,7 +80,7 @@ void Model::TraverseNode(unsigned int nextNode, glm::mat4 matrix)
 	glm::mat4 matNode = glm::mat4(1.0f);
 	if (node.find("matrix") != node.end())
 	{
-		float matValues[3];
+		float matValues[16];
 		for (unsigned int i = 0; i < node["matrix"].size(); ++i)
 		{
 			matValues[i] = (node["matrix"][i]);
@@ -251,9 +251,9 @@ std::vector<Texture> Model::GetTextures()
 		{
 			if (texPath.find("baseColor") != std::string::npos)
 			{
-				Texture diffuse = Texture((fileDirectory + texPath).c_str(), "diffuse", mLoadedTex.size());
-				textures.push_back(diffuse);
-				mLoadedTex.push_back(diffuse);
+				Texture diffuce = Texture((fileDirectory + texPath).c_str(), "diffuce", mLoadedTex.size());
+				textures.push_back(diffuce);
+				mLoadedTex.push_back(diffuce);
 				mLoadedTexName.push_back(texPath);
 			}
 			else if (texPath.find("metallicRoughness") != std::string::npos)
