@@ -16,7 +16,7 @@ void Model::Draw(Shader& shader, Camera& camera)
 {
 	for (unsigned int i = 0; i < mMeshes.size(); ++i)
 	{
-		mMeshes[i].Mesh::Draw(shader, camera, mMatricesMeshes[i]);
+		mMeshes[i].Draw(shader, camera, mMatricesMeshes[i]);
 	}
 }
 
@@ -156,7 +156,7 @@ std::vector<float> Model::GetFloats(json accessor)
 	}
 	else
 	{
-		std::invalid_argument("Type of Model is Invalid");
+		std::cout<< "Type of Model is Invalid";
 	}
 
 	unsigned int beginningOfData = byteOffset + accByteOffset;
