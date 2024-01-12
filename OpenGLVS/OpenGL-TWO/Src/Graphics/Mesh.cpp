@@ -49,7 +49,7 @@ void Mesh::Draw
 			std::string num;
 			std::string texType = mTextures[i].GetTextureType();
 
-			if (texType == "diffuce")
+			if (texType == "diffuse")
 			{
 				num = std::to_string(diffNum++);
 			}

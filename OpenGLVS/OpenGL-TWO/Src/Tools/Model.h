@@ -14,13 +14,14 @@ using json = nlohmann::json;
 class Model
 {
 public:
-	Model(const char* file);
-	~Model();
+	Model(const char* file, const char* folder = "");
+	void Delete();
 
 	void Update(Shader& shader, Camera& camera);
 
 private:
 	const char* mFile;
+	const char* mFolder;
 	std::vector<unsigned char> mData;
 	nlohmann::json mJson; 
 

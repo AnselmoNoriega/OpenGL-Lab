@@ -41,7 +41,7 @@ Texture::Texture(const char* image, const char* texType, unsigned int unit)
 	}
 	else
 	{
-		std::cout<<"Texture Type: Recognition Error";
+		std::cout<<"Texture Type: Recognition Error\n";
 	}
 
 	glGenerateMipmap(GL_TEXTURE_2D);

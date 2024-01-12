@@ -31,7 +31,13 @@ int main()
 	glViewport(0, 0, winSize.first, winSize.second);
 	glClearColor(0.1f, 0.1f, 0.4f, 1.0f);
 
-	Model model("scene.gltf");
+	std::vector<Model> models
+	(
+		{
+		Model("Ground/scene.gltf", "Ground/"),
+		Model("Trees/scene.gltf", "Trees/")
+		}
+	);
 
 	Shader shaderProgram("VertexShader.shader", "FragmentShader.shader");
 
@@ -43,7 +49,6 @@ int main()
 	glm::mat4 objectModel = glm::translate(glm::mat4(1.0f), objectPos);
 
 	shaderProgram.UseProgram();
-	glUniform4f(UniformHandler::GetUniformLocation(shaderProgram.GetID(), "_lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform4f(UniformHandler::GetUniformLocation(shaderProgram.GetID(), "_lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(UniformHandler::GetUniformLocation(shaderProgram.GetID(), "_lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
@@ -58,10 +63,19 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		camera.Inputs(window);
-		model.Update(shaderProgram, camera);
+
+		for (int i = 0; i < models.size(); ++i)
+		{
+			models[i].Update(shaderProgram, camera);
+		}
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+	}
+
+	for (int i = 0; i < models.size(); ++i)
+	{
+		models[i].Delete();
 	}
 
 	glfwDestroyWindow(window);

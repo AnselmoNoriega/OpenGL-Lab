@@ -5,12 +5,13 @@
 #include "Texture.h"
 #include "Mesh.h"
 
-Model::Model(const char* file)
+Model::Model(const char* file, const char* folder)
 {
 	std::string text = ParseFile(file);
 	mJson = json::parse(text);
 
 	mFile = file;
+	mFolder = folder;
 	mData = GetData();
 	TraverseNode(0);
 }
@@ -41,7 +42,7 @@ void Model::LoadMesh(unsigned int meshInd)
 	std::vector<Vertex> vertices = AssembleVertices(positions, normals, texUVs);
 	std::vector<unsigned int> indices = GetIndices(mJson["accessors"][indAccInd]);
 
-	mMeshes.push_back(Mesh(vertices, indices, textures));
+	mMeshes.emplace_back(Mesh(vertices, indices, textures));
 }
 
 void Model::TraverseNode(unsigned int nextNode, glm::mat4 matrix)
@@ -140,7 +141,7 @@ std::vector<float> Model::GetFloats(json accessor)
 	json bufferView = mJson["bufferViews"][buffViewInd];
 	unsigned int byteOffset = bufferView["byteOffset"];
 
-	unsigned int numPerVert;
+	unsigned int numPerVert = 0;
 	if (type == "SCALAR")
 	{
 		numPerVert = 1;
@@ -232,7 +233,6 @@ std::vector<Texture> Model::GetTextures()
 {
 	std::vector<Texture> textures;
 
-	std::string fileStr = std::string(mFile);
 	std::string fileDirectory = "Res/Models/";
 
 	for (unsigned int i = 0; i < mJson["images"].size(); ++i)
@@ -252,17 +252,16 @@ std::vector<Texture> Model::GetTextures()
 
 		if (!skip)
 		{
-			if (texPath.find("baseColor") != std::string::npos)
+			if (texPath.find("baseColor") != std::string::npos || texPath.find("diffuse") != std::string::npos)
 			{
-				auto t = (fileDirectory + texPath).c_str();
-				Texture diffuce = Texture((fileDirectory + texPath).c_str(), "diffuce", mLoadedTex.size());
-				textures.push_back(diffuce);
-				mLoadedTex.push_back(diffuce);
+				Texture diffuse = Texture((fileDirectory + mFolder + texPath).c_str(), "diffuse", mLoadedTex.size());
+				textures.push_back(diffuse);
+				mLoadedTex.push_back(diffuse);
 				mLoadedTexName.push_back(texPath);
 			}
-			else if (texPath.find("metallicRoughness") != std::string::npos)
+			else if (texPath.find("metallicRoughness") != std::string::npos || texPath.find("specular") != std::string::npos)
 			{
-				Texture specular = Texture((fileDirectory + texPath).c_str(), "specular", mLoadedTex.size());
+				Texture specular = Texture((fileDirectory + mFolder + texPath).c_str(), "specular", mLoadedTex.size());
 				textures.push_back(specular);
 				mLoadedTex.push_back(specular);
 				mLoadedTexName.push_back(texPath);
@@ -344,7 +343,7 @@ std::string Model::ParseFile(const char* fileName)
 	return std::string();
 }
 
-Model::~Model()
+void Model::Delete()
 {
 	for (auto& mesh : mMeshes)
 	{
