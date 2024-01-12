@@ -12,11 +12,11 @@ Model::Model(const char* file)
 	TraverseNode(0);
 }
 
-void Model::Draw(Shader& shader, Camera& camera)
+void Model::Update(Shader& shader, Camera& camera)
 {
 	for (unsigned int i = 0; i < mMeshes.size(); ++i)
 	{
-		mMeshes[i].Draw(shader, camera, mMatricesMeshes[i]);
+		mMeshes[i].Draw(shader, camera, mMatricesMeshes[i], mTranslationsMeshes[i], mRotationsMeshes[i]);
 	}
 }
 
@@ -33,10 +33,10 @@ void Model::LoadMesh(unsigned int meshInd)
 	std::vector<glm::vec3> normals = GroupFloatsVec3(normalsVec);
 	std::vector<float> texVec = GetFloats(mJson["accessors"][texAccInd]);
 	std::vector<glm::vec2> texUVs = GroupFloatsVec2(texVec);
+	std::vector<Texture> textures = GetTextures();
 
 	std::vector<Vertex> vertices = AssembleVertices(positions, normals, texUVs);
 	std::vector<unsigned int> indices = GetIndices(mJson["accessors"][indAccInd]);
-	std::vector<Texture> textures = GetTextures();
 
 	mMeshes.push_back(Mesh(vertices, indices, textures));
 }
@@ -339,4 +339,12 @@ std::string Model::ParseFile(const char* fileName)
 		return contents;
 	}
 	return std::string();
+}
+
+Model::~Model()
+{
+	for (auto& mesh : mMeshes)
+	{
+		mesh.Delete();
+	}
 }

@@ -5,7 +5,7 @@ class VertexArray
 {
 public:
 	VertexArray();
-	~VertexArray();
+	void Delete();
 
 	void LinkVertexBuffer(VertexBuffer& vertexBuffer, unsigned int layout, unsigned int vertSize, unsigned int stride, void* offset);
 	void Bind();

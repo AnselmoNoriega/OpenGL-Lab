@@ -13,13 +13,14 @@ class Model
 {
 public:
 	Model(const char* file);
+	~Model();
 
-	void Draw(Shader& shader, Camera& camera);
+	void Update(Shader& shader, Camera& camera);
 
 private:
 	const char* mFile;
 	std::vector<unsigned char> mData;
-	nlohmann::json mJson;
+	nlohmann::json mJson; 
 
 	std::vector<Mesh> mMeshes;
 	std::vector<glm::vec3> mTranslationsMeshes;

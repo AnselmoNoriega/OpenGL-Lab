@@ -16,6 +16,7 @@ Texture::Texture(const char* image, const char* texType, unsigned int unit)
 
 	glGenTextures(1, &mID);
 	glActiveTexture(GL_TEXTURE0 + unit);
+
 	mUnit = unit;
 	glBindTexture(GL_TEXTURE_2D, mID);
 
@@ -49,11 +50,6 @@ Texture::Texture(const char* image, const char* texType, unsigned int unit)
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-Texture::~Texture()
-{
-	glDeleteTextures(1, &mID);
-}
-
 void Texture::TextureUnit(Shader& shader, const char* uniform, unsigned int unit)
 {
 	shader.UseProgram();
@@ -69,4 +65,10 @@ void Texture::Bind()
 void Texture::Unbind()
 {
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+
+void Texture::Delete()
+{
+	glDeleteTextures(1, &mID);
 }

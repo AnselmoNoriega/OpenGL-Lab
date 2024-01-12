@@ -78,3 +78,13 @@ void Mesh::Draw
 
 	glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);
 }
+
+void Mesh::Delete()
+{
+	for (int i = 0; i < mTextures.size(); i++)
+	{
+		mTextures[i].Delete();
+	}
+
+	mVertexArray.Delete();
+}
