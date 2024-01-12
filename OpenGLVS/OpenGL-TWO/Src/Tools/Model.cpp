@@ -2,6 +2,9 @@
 #include <iostream>
 #include <fstream>
 
+#include "Texture.h"
+#include "Mesh.h"
+
 Model::Model(const char* file)
 {
 	std::string text = ParseFile(file);

@@ -1,12 +1,14 @@
 #pragma once
 #include <json/json.h>
-#include <glm/glm.hpp>
+
 #include "VertexBuffer.h"
-#include "Texture.h"
-#include "Mesh.h"
 
 class Shader;
 class Camera;
+class Texture;
+class Mesh;
+class Vertex;
+
 using json = nlohmann::json;
 
 class Model
