@@ -13,6 +13,9 @@ uniform vec4 _lightColor;
 uniform vec3 _lightPos;
 uniform vec3 _camPos;
 
+float near = 0.1f;
+float far = 100.0f;
+
 vec4 PointLight()
 {
     vec3 lightVec = _lightPos - crntPos;
@@ -79,7 +82,21 @@ vec4 SpotLight()
     return (texture(diffuse0, textureCoord) * (diffuse * inten + ambient) + texture(specular0, textureCoord).r * specular * inten) * _lightColor;
 }
 
+float LinearizeDepth(float depth)
+{
+    return (2.0 * near * far) / (far + near - (depth * 2.0 - 1.0) * (far - near));
+
+}
+
+float LogisticDepth(float depth, float steepness = 0.5f, float offset = 5.0f)
+{
+    float zVal = LinearizeDepth(depth);
+    return (1 / (1 + exp(-steepness * (zVal - offset))));
+
+}
+
 void main()
 {
-    color = DirectLight();
+    float depth = LogisticDepth(gl_FragCoord.z);
+    color = DirectLight() * (1.0f - depth) + vec4(depth * vec3(0.85f, 0.85f, 0.90f), 1.0f);
 }

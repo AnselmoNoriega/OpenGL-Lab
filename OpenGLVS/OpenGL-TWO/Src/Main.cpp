@@ -29,15 +29,11 @@ int main()
 
 	gladLoadGL();
 	glViewport(0, 0, winSize.first, winSize.second);
-	glClearColor(0.1f, 0.1f, 0.4f, 1.0f);
+	glClearColor(0.85f, 0.85f, 0.90f, 1.0f);
 
-	std::vector<Model> models
-	(
-		{
-		Model("Ground/scene.gltf", "Ground/"),
-		Model("Trees/scene.gltf", "Trees/")
-		}
-	);
+	std::vector<Model> models;
+	models.emplace_back(Model("Ground/scene.gltf", "Ground/"));
+	models.emplace_back(Model("Trees/scene.gltf", "Trees/"));
 
 	Shader shaderProgram("VertexShader.shader", "FragmentShader.shader");
 
