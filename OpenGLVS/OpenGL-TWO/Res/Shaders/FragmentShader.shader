@@ -95,8 +95,14 @@ float LogisticDepth(float depth, float steepness = 0.5f, float offset = 5.0f)
 
 }
 
-void main()
+vec4 FogEffect()
 {
     float depth = LogisticDepth(gl_FragCoord.z);
-    color = DirectLight() * (1.0f - depth) + vec4(depth * vec3(0.85f, 0.85f, 0.90f), 1.0f);
+    return DirectLight() * (1.0f - depth) + vec4(depth * vec3(0.1f, 0.1f, 0.4f), 1.0f);
+}
+
+void main()
+{
+    color = DirectLight();
+
 }

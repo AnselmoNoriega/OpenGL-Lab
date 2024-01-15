@@ -29,13 +29,14 @@ int main()
 
 	gladLoadGL();
 	glViewport(0, 0, winSize.first, winSize.second);
-	glClearColor(0.85f, 0.85f, 0.90f, 1.0f);
+	glClearColor(0.1f, 0.1f, 0.4f, 1.0f);
 
 	std::vector<Model> models;
-	models.emplace_back(Model("Ground/scene.gltf", "Ground/"));
-	models.emplace_back(Model("Trees/scene.gltf", "Trees/"));
+	models.emplace_back(Model("Bird/scene.gltf", "Bird/"));
+	Model outlineModel("BirdOutline/scene.gltf", "BirdOutline/");
 
 	Shader shaderProgram("VertexShader.shader", "FragmentShader.shader");
+	Shader outliningProgram("VertexOutline.shader", "FragmentOutline.shader");
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -49,6 +50,8 @@ int main()
 	glUniform3f(UniformHandler::GetUniformLocation(shaderProgram.GetID(), "_lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_STENCIL_TEST);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 	Camera camera(winSize.first, winSize.second, glm::vec3(0.0f, 0.0f, 2.0f));
 	camera.SetMatrix(45.0f, 0.1f, 100.0f, shaderProgram, "_mvp");
@@ -56,14 +59,27 @@ int main()
 
 	while (!glfwWindowShouldClose(window))
 	{
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		camera.Inputs(window);
+
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		glStencilMask(0xFF);
 
 		for (int i = 0; i < models.size(); ++i)
 		{
 			models[i].Update(shaderProgram, camera);
 		}
+
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		glStencilMask(0x00);
+		glDisable(GL_DEPTH_TEST);
+		outliningProgram.UseProgram();
+		outlineModel.Update(outliningProgram, camera);
+
+		glStencilMask(0xFF);
+		glStencilFunc(GL_ALWAYS, 0, 0xFF);
+		glEnable(GL_DEPTH_TEST);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
