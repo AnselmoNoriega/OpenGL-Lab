@@ -33,7 +33,11 @@ int main()
 
 	std::vector<Model> models;
 	models.emplace_back(Model("Bird/scene.gltf", "Bird/"));
-	Model outlineModel("BirdOutline/scene.gltf", "BirdOutline/");
+	models.emplace_back(Model("Ground2/scene.gltf", "Ground2/"));
+	models.emplace_back(Model("Grass/scene.gltf", "Grass/"));
+
+	std::vector<Model> outlineModels;
+	outlineModels.emplace_back(Model("BirdOutline/scene.gltf", "BirdOutline/"));
 
 	Shader shaderProgram("VertexShader.shader", "FragmentShader.shader");
 	Shader outliningProgram("VertexOutline.shader", "FragmentOutline.shader");
@@ -79,8 +83,13 @@ int main()
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 		glStencilMask(0x00);
 		glDisable(GL_DEPTH_TEST);
+
 		outliningProgram.UseProgram();
-		outlineModel.Update(outliningProgram, camera);
+
+		for (int i = 0; i < outlineModels.size(); ++i)
+		{
+			outlineModels[i].Update(outliningProgram, camera);
+		}
 
 		glStencilMask(0xFF);
 		glStencilFunc(GL_ALWAYS, 0, 0xFF);
@@ -93,6 +102,11 @@ int main()
 	for (int i = 0; i < models.size(); ++i)
 	{
 		models[i].Delete();
+	}
+
+	for (int i = 0; i < outlineModels.size(); ++i)
+	{
+		outlineModels[i].Delete();
 	}
 
 	glfwDestroyWindow(window);
