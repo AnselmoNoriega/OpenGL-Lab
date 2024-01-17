@@ -10,6 +10,17 @@
 #include "UniformHandler.h"
 #include "Model.h"
 
+float rectangleVertices[] =
+{
+	 1.0f, -1.0f,  1.0f, 0.0f,
+	-1.0f, -1.0f,  0.0f, 0.0f,
+	-1.0f,  1.0f,  0.0f, 1.0f,
+
+	 1.0f,  1.0f,  1.0f, 1.0f,
+	 1.0f, -1.0f,  1.0f, 0.0f,
+	-1.0f,  1.0f,  0.0f, 1.0f
+};
+
 int main()
 {
 	glfwInit();
@@ -31,16 +42,8 @@ int main()
 	glViewport(0, 0, winSize.first, winSize.second);
 	glClearColor(0.9f, 0.7f, 1.0f, 1.0f);
 
-	std::vector<Model> models;
-	models.emplace_back(Model("Bird/scene.gltf", "Bird/"));
-	models.emplace_back(Model("Ground2/scene.gltf", "Ground2/"));
-	models.emplace_back(Model("Grass/scene.gltf", "Grass/"));
-
-	std::vector<Model> outlineModels;
-	outlineModels.emplace_back(Model("BirdOutline/scene.gltf", "BirdOutline/"));
-
 	Shader shaderProgram("VertexShader.shader", "FragmentShader.shader");
-	Shader outliningProgram("VertexOutline.shader", "FragmentOutline.shader");
+	Shader framebufferProgram("VertexBasic.shader", "FragmentBasic.shader");
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -53,20 +56,34 @@ int main()
 	glUniform4f(UniformHandler::GetUniformLocation(shaderProgram.GetID(), "_lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(UniformHandler::GetUniformLocation(shaderProgram.GetID(), "_lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
+	framebufferProgram.UseProgram();
+	glUniform1i(UniformHandler::GetUniformLocation(framebufferProgram.GetID(), "screenTexture"), 0);
+
 	glEnable(GL_DEPTH_TEST);
 
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
 	glFrontFace(GL_CCW);
 
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_BLEND);
-
-	glEnable(GL_STENCIL_TEST);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+	/*glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);*/
 
 	Camera camera(winSize.first, winSize.second, glm::vec3(0.0f, 0.0f, 2.0f));
 	camera.SetMatrix(45.0f, 0.1f, 100.0f, shaderProgram, "_mvp");
+
+	std::vector<Model> models;
+	models.emplace_back(Model("Bird/scene.gltf", "Bird/"));
+
+	unsigned int recVA, recVB;
+	glGenVertexArrays(1, &recVA);
+	glGenBuffers(1, &recVB);
+	glBindVertexArray(recVA);
+	glBindBuffer(GL_ARRAY_BUFFER, recVB);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(rectangleVertices), &rectangleVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
 	unsigned int FB;
 	glGenFramebuffers(1, &FB);
@@ -96,32 +113,24 @@ int main()
 
 	while (!glfwWindowShouldClose(window))
 	{
+		glBindFramebuffer(GL_FRAMEBUFFER, FB);
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
 
 		camera.Inputs(window);
-
-		glStencilFunc(GL_ALWAYS, 1, 0xFF);
-		glStencilMask(0xFF);
 
 		for (int i = 0; i < models.size(); ++i)
 		{
 			models[i].Update(shaderProgram, camera);
 		}
 
-		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-		glStencilMask(0x00);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		framebufferProgram.UseProgram();
+		glBindVertexArray(recVA);
 		glDisable(GL_DEPTH_TEST);
-
-		outliningProgram.UseProgram();
-
-		for (int i = 0; i < outlineModels.size(); ++i)
-		{
-			outlineModels[i].Update(outliningProgram, camera);
-		}
-
-		glStencilMask(0xFF);
-		glStencilFunc(GL_ALWAYS, 0, 0xFF);
-		glEnable(GL_DEPTH_TEST);
+		glBindTexture(GL_TEXTURE_2D, FbTexture);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -130,11 +139,6 @@ int main()
 	for (int i = 0; i < models.size(); ++i)
 	{
 		models[i].Delete();
-	}
-
-	for (int i = 0; i < outlineModels.size(); ++i)
-	{
-		outlineModels[i].Delete();
 	}
 
 	glfwDestroyWindow(window);

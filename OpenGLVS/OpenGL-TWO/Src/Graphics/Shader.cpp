@@ -57,14 +57,14 @@ void Shader::Check4Errors(unsigned int shader, const char* type)
 	{
 		char infoLog[1024];
 		glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-		std::cout << "SHADER COMPILATION ERROR: " << type << std::endl;
+		std::cout << "SHADER COMPILATION ERROR: " << type << ": " << infoLog << std::endl;
 		return;
 	}
 	else if (hasCompiled == GL_FALSE)
 	{
 		char infoLog[1024];
 		glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-		std::cout << "SHADER LINKING ERROR: " << type << std::endl;
+		std::cout << "SHADER LINKING ERROR: " << type << ": " << infoLog << std::endl;
 		return;
 	}
 }
