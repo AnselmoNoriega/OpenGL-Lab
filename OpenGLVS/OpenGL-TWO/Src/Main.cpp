@@ -29,7 +29,7 @@ int main()
 
 	gladLoadGL();
 	glViewport(0, 0, winSize.first, winSize.second);
-	glClearColor(0.1f, 0.1f, 0.4f, 1.0f);
+	glClearColor(0.9f, 0.7f, 1.0f, 1.0f);
 
 	std::vector<Model> models;
 	models.emplace_back(Model("Bird/scene.gltf", "Bird/"));
@@ -57,7 +57,10 @@ int main()
 
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
-	glFrontFace(GL_CCW); 
+	glFrontFace(GL_CCW);
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
 
 	glEnable(GL_STENCIL_TEST);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
