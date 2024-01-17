@@ -68,6 +68,31 @@ int main()
 	Camera camera(winSize.first, winSize.second, glm::vec3(0.0f, 0.0f, 2.0f));
 	camera.SetMatrix(45.0f, 0.1f, 100.0f, shaderProgram, "_mvp");
 
+	unsigned int FB;
+	glGenFramebuffers(1, &FB);
+	glBindFramebuffer(GL_FRAMEBUFFER, FB);
+
+	unsigned int FbTexture;
+	glGenTextures(1, &FbTexture);
+	glBindTexture(GL_TEXTURE_2D, FbTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, winSize.first, winSize.second, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, FbTexture, 0);
+
+	unsigned int RB;
+	glGenRenderbuffers(1, &RB);
+	glBindRenderbuffer(GL_RENDERBUFFER, RB);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, winSize.first, winSize.second);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RB);
+
+	auto FbStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (FbStatus != GL_FRAMEBUFFER_COMPLETE)
+	{
+		std::cout << "FrameBuffer ERROR = " << FbStatus << std::endl;
+	}
 
 	while (!glfwWindowShouldClose(window))
 	{
