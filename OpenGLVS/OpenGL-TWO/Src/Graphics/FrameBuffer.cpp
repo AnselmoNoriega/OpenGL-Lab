@@ -4,31 +4,16 @@
 #include <iostream>
 
 #include "UniformHandler.h"
-#include "VertexBuffer.h"
 
-FrameBuffer::FrameBuffer(const char* vertexShader, const char* fragmentShader, int winWidth, int winHeight):
-	mShader(vertexShader, fragmentShader)
+FrameBuffer::FrameBuffer(const char* vertexShader, const char* fragmentShader, int winWidth, int winHeight, std::vector<Vertex>& vertices):
+	mShader(vertexShader, fragmentShader), mVertexBuffer(vertices)
 {
 	mShader.UseProgram();
 	glUniform1i(UniformHandler::GetUniformLocation(mShader.GetID(), "screenTexture"), 0);
 
-	Vertex rectangleVertices[] =
-	{
-		Vertex(glm::vec3( 1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)),
-		Vertex(glm::vec3(-1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)),
-		Vertex(glm::vec3(-1.0f,  1.0f, 0.0f),  glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f)),
-
-		Vertex(glm::vec3( 1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f)),
-		Vertex(glm::vec3( 1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)),
-		Vertex(glm::vec3(-1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f))
-	};
-
-	std::vector<Vertex> frameRec(rectangleVertices, rectangleVertices + sizeof(rectangleVertices) / sizeof(Vertex));
-	VertexBuffer vertexBuffer(frameRec);
-
 	mVertexArray.Bind();
-	mVertexArray.LinkVertexBuffer(vertexBuffer, 0, 3, sizeof(Vertex), (void*)(offsetof(Vertex, Position)));
-	mVertexArray.LinkVertexBuffer(vertexBuffer, 1, 2, sizeof(Vertex), (void*)(offsetof(Vertex, TextUV)));
+	mVertexArray.LinkVertexBuffer(mVertexBuffer, 0, 3, sizeof(Vertex), (void*)(offsetof(Vertex, Position)));
+	mVertexArray.LinkVertexBuffer(mVertexBuffer, 1, 2, sizeof(Vertex), (void*)(offsetof(Vertex, TextUV)));
 
 	glGenFramebuffers(1, &mID);
 	Bind();
