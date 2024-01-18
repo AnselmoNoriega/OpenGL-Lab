@@ -46,6 +46,12 @@
     <ClCompile Include="Src\Graphics\ObjectTypes\ObjectGroup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Graphics\ObjectTypes\BasicBlendObjects.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Graphics\FrameBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Graphics\Shader.h" />
@@ -58,5 +64,7 @@
     <ClInclude Include="Src\Tools\UniformHandler.h" />
     <ClInclude Include="Src\Tools\Model.h" />
     <ClInclude Include="Src\Graphics\ObjectTypes\ObjectGroup.h" />
+    <ClInclude Include="Src\Graphics\ObjectTypes\BasicBlendObjects.h" />
+    <ClInclude Include="Src\Graphics\FrameBuffer.h" />
   </ItemGroup>
 </Project>

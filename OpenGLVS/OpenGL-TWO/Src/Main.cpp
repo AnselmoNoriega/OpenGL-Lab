@@ -9,17 +9,8 @@
 #include "Camera.h"
 #include "UniformHandler.h"
 #include "ObjectTypes/ObjectGroup.h"
+#include "FrameBuffer.h"
 
-float rectangleVertices[] =
-{
-	 1.0f, -1.0f,  1.0f, 0.0f,
-	-1.0f, -1.0f,  0.0f, 0.0f,
-	-1.0f,  1.0f,  0.0f, 1.0f,
-
-	 1.0f,  1.0f,  1.0f, 1.0f,
-	 1.0f, -1.0f,  1.0f, 0.0f,
-	-1.0f,  1.0f,  0.0f, 1.0f
-};
 
 int main()
 {
@@ -42,14 +33,6 @@ int main()
 	glViewport(0, 0, winSize.first, winSize.second);
 	glClearColor(0.9f, 0.7f, 1.0f, 1.0f);
 
-	Shader framebufferProgram("VertexBasic.shader", "FragmentBasic.shader");
-
-	framebufferProgram.UseProgram();
-	glUniform1i(UniformHandler::GetUniformLocation(framebufferProgram.GetID(), "screenTexture"), 0);
-
-	glEnable(GL_DEPTH_TEST);
-
-
 	/*glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);*/
 
@@ -59,46 +42,11 @@ int main()
 	ObjectGroup objects("VertexShader.shader", "FragmentShader.shader");
 	objects.AddModel("Bird/scene.gltf", "Bird/");
 
-	unsigned int recVA, recVB;
-	glGenVertexArrays(1, &recVA);
-	glGenBuffers(1, &recVB);
-	glBindVertexArray(recVA);
-	glBindBuffer(GL_ARRAY_BUFFER, recVB);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(rectangleVertices), &rectangleVertices, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-
-	unsigned int FB;
-	glGenFramebuffers(1, &FB);
-	glBindFramebuffer(GL_FRAMEBUFFER, FB);
-
-	unsigned int FbTexture;
-	glGenTextures(1, &FbTexture);
-	glBindTexture(GL_TEXTURE_2D, FbTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, winSize.first, winSize.second, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, FbTexture, 0);
-
-	unsigned int RB;
-	glGenRenderbuffers(1, &RB);
-	glBindRenderbuffer(GL_RENDERBUFFER, RB);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, winSize.first, winSize.second);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RB);
-
-	auto FbStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-	if (FbStatus != GL_FRAMEBUFFER_COMPLETE)
-	{
-		std::cout << "FrameBuffer ERROR = " << FbStatus << std::endl;
-	}
+	FrameBuffer frameBuffer("VertexBasic.shader", "FragmentBasic.shader", winSize.first, winSize.second);
 
 	while (!glfwWindowShouldClose(window))
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, FB);
+		frameBuffer.Bind();
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
@@ -107,12 +55,7 @@ int main()
 
 		objects.Update(camera);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		framebufferProgram.UseProgram();
-		glBindVertexArray(recVA);
-		glDisable(GL_DEPTH_TEST);
-		glBindTexture(GL_TEXTURE_2D, FbTexture);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		frameBuffer.Update();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

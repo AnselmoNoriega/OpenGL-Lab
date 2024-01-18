@@ -21,6 +21,7 @@ ObjectGroup::ObjectGroup(const char* vertexShader, const char* fragmentShader):
 
 void ObjectGroup::Update(Camera& camera)
 {
+	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	for (int i = 0; i < mModels.size(); ++i)
 	{
