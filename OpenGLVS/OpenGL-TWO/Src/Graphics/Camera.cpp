@@ -101,12 +101,10 @@ void Camera::Inputs(GLFWwindow* window)
 	}
 }
 
-void Camera::SetMatrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform)
+void Camera::SetMatrix(float FOVdeg, float nearPlane, float farPlane)
 {
 	mView = glm::lookAt(mPos, mPos + mOrientation, up);
 	mProjection = glm::perspective(glm::radians(FOVdeg), (float)(mWidth / mHeight), nearPlane, farPlane);
-
-	MVP_ID = UniformHandler::GetUniformLocation(shader.GetID(), uniform);
 }
 
 glm::vec3 Camera::GetPos()

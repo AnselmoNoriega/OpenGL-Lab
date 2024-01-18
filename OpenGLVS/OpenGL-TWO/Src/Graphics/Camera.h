@@ -12,7 +12,7 @@ public:
 	void Update(Shader& shader, const char* uniform);
 	void Inputs(GLFWwindow* window);
 
-	void SetMatrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform);
+	void SetMatrix(float FOVdeg, float nearPlane, float farPlane);
 
 	glm::vec3 GetPos();
 
@@ -23,7 +23,6 @@ private:
 	glm::mat4 mView;
 	glm::mat4 mProjection;
 
-	unsigned int MVP_ID;
 
 	int mWidth;
 	int mHeight;
