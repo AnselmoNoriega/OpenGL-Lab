@@ -6,7 +6,7 @@
 #include "UniformHandler.h"
 
 FrameBuffer::FrameBuffer(const char* vertexShader, const char* fragmentShader, int winWidth, int winHeight, std::vector<Vertex>& vertices):
-	mShader(vertexShader, fragmentShader), mVertexBuffer(vertices)
+	mShader(vertexShader, fragmentShader), mVertexBuffer(vertices), mTexure(winWidth, winHeight)
 {
 	mShader.UseProgram();
 	glUniform1i(UniformHandler::GetUniformLocation(mShader.GetID(), "screenTexture"), 0);
@@ -18,14 +18,7 @@ FrameBuffer::FrameBuffer(const char* vertexShader, const char* fragmentShader, i
 	glGenFramebuffers(1, &mID);
 	Bind();
 
-	glGenTextures(1, &mTextureId);
-	glBindTexture(GL_TEXTURE_2D, mTextureId);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, winWidth, winHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextureId, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexure.GetID(), 0);
 
 	unsigned int RB;
 	glGenRenderbuffers(1, &RB);
@@ -51,6 +44,6 @@ void FrameBuffer::Update()
 	mShader.UseProgram();
 	mVertexArray.Bind();
 	glDisable(GL_DEPTH_TEST);
-	glBindTexture(GL_TEXTURE_2D, mTextureId);
+	mTexure.Bind();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }

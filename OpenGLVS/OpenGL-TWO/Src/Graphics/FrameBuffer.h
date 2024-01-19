@@ -17,8 +17,7 @@ private:
 	Shader mShader;
 	VertexArray mVertexArray;
 	VertexBuffer mVertexBuffer;
-	//Texture mTexure;
-	unsigned int mTextureId;
+	Texture mTexure;
 
 	unsigned int mID;
 };
