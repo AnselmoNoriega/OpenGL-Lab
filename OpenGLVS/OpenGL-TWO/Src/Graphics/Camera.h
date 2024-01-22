@@ -16,13 +16,13 @@ public:
 
 	glm::vec3 GetPos();
 
+	glm::vec3 mOrientation = glm::vec3(0.0f, 0.0f, -1.0f);
+	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 private:
 	glm::vec3 mPos;
-	glm::vec3 mOrientation = glm::vec3(0.0f, 0.0f, -1.0f);
 
 	glm::mat4 mView;
 	glm::mat4 mProjection;
-
 
 	int mWidth;
 	int mHeight;
@@ -31,6 +31,5 @@ private:
 	float mSensitivity = 100.0f;
 
 	bool firstClick = true;
-	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 };
 

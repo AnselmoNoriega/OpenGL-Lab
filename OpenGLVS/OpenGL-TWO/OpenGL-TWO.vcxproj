@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Graphics\SkyBox.cpp" />
     <ClCompile Include="Src\Graphics\FrameBuffer.cpp" />
     <ClCompile Include="Src\Graphics\ObjectTypes\BasicBlendObjects.cpp" />
     <ClCompile Include="Src\Graphics\ObjectTypes\ObjectGroup.cpp" />
@@ -174,6 +175,7 @@
     <ClCompile Include="Src\Tools\UniformHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Graphics\SkyBox.h" />
     <ClInclude Include="Src\Graphics\FrameBuffer.h" />
     <ClInclude Include="Src\Graphics\ObjectTypes\BasicBlendObjects.h" />
     <ClInclude Include="Src\Graphics\ObjectTypes\ObjectGroup.h" />

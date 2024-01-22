@@ -1,16 +1,11 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
-#include "Shader.h"
 #include "Camera.h"
-#include "UniformHandler.h"
 #include "ObjectTypes/ObjectGroup.h"
 #include "FrameBuffer.h"
-
+#include "SkyBox.h"
 
 int main()
 {
@@ -39,8 +34,16 @@ int main()
 	Camera camera(winSize.first, winSize.second, glm::vec3(0.0f, 0.0f, 2.0f));
 	camera.SetMatrix(45.0f, 0.1f, 100.0f);
 
+	Shader skyboxShader("VertexSkybox.shader", "FragmentSkybox.shader");
+	skyboxShader.UseProgram();
+	glUniform1i(glGetUniformLocation(skyboxShader.GetID(), "skybox"), 0);
+
 	ObjectGroup objects("VertexShader.shader", "FragmentShader.shader");
 	objects.AddModel("Bird/scene.gltf", "Bird/");
+	objects.AddModel("Grass/scene.gltf", "Grass/");
+	objects.AddModel("Ground2/scene.gltf", "Ground2/");
+
+	SkyBox skyBox("VertexSkybox.shader", "FragmentSkybox.shader", winSize.first, winSize.second);
 
 	Vertex rectangleVertices[] =
 	{
@@ -52,7 +55,6 @@ int main()
 		Vertex(glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)),
 		Vertex(glm::vec3(-1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f))
 	};
-
 	std::vector<Vertex> frameRec(rectangleVertices, rectangleVertices + sizeof(rectangleVertices) / sizeof(Vertex));
 
 	FrameBuffer frameBuffer("VertexBasic.shader", "FragmentBasic.shader", winSize.first, winSize.second, frameRec);
@@ -67,6 +69,8 @@ int main()
 		camera.Inputs(window);
 
 		objects.Update(camera);
+
+		skyBox.Update(camera);
 
 		frameBuffer.Update();
 
