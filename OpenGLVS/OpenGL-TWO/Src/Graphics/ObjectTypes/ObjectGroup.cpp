@@ -28,11 +28,20 @@ void ObjectGroup::Update(Camera& camera)
 		mModels[i].Update(mShader, camera);
 	}
 	glDisable(GL_CULL_FACE);
+	for (int i = 0; i < mFlatModels.size(); ++i)
+	{
+		mFlatModels[i].Update(mShader, camera);
+	}
 }
 
 void ObjectGroup::AddModel(const char* file, const char* folder)
 {
 	mModels.emplace_back(Model(file, folder));
+}
+
+void ObjectGroup::AddFlatModel(const char* file, const char* folder)
+{
+	mFlatModels.emplace_back(Model(file, folder));
 }
 
 ObjectGroup::~ObjectGroup()

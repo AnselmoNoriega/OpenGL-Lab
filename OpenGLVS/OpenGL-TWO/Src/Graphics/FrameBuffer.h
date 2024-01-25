@@ -7,7 +7,7 @@
 class FrameBuffer
 {
 public:
-	FrameBuffer(const char* vertexShader, const char* fragmentShader, int winWidth, int winHeight, std::vector<Vertex>& vertices);
+	FrameBuffer(const char* vertexShader, const char* fragmentShader, int winWidth, int winHeight);
 
 	void Bind();
 
