@@ -1,3 +1,4 @@
+#define GLFW_INCLUDE_NONE
 #include "SkyBox.h"
 #include "VertexBuffer.h"
 #include "ElementBuffer.h"
@@ -70,11 +71,12 @@ SkyBox::SkyBox(const char* vertexShader, const char* fragmentShader, int screenW
 	};
 
 	glGenTextures(1, &mTextureID);
-	glBindTexture(GL_TEXTURE_CUBE_MAP_SEAMLESS, mTextureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, mTextureID);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 
 	for (int i = 0; i < 6; i++)
 	{
@@ -105,7 +107,7 @@ void SkyBox::Update(Camera& camera)
 	
 	mVertexArray.Bind();
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_CUBE_MAP_SEAMLESS, mTextureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, mTextureID);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 	mVertexArray.Unbind();
 	
