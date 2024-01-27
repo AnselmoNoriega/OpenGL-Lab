@@ -7,18 +7,19 @@
 class FrameBuffer
 {
 public:
-	FrameBuffer(const char* vertexShader, const char* fragmentShader, int winWidth, int winHeight);
+	FrameBuffer(const char* vertexShader, const char* fragmentShader, int winWidth, int winHeight, int samplesNum = 8);
 
 	void Bind();
 
-	void Update();
+	void Update(int width, int height);
 
 private:
 	Shader mShader;
 	VertexArray mVertexArray;
 	VertexBuffer mVertexBuffer;
-	Texture mTexure;
 
-	unsigned int mID;
+	unsigned int mSampleID;
+	unsigned int mPostProcessingID;
+	unsigned int mPostProcessingTextureID;
 };
 

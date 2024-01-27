@@ -59,7 +59,7 @@ int main()
 
 		skyBox.Update(camera);
 
-		frameBuffer.Update();
+		frameBuffer.Update(winSize.first, winSize.second);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
