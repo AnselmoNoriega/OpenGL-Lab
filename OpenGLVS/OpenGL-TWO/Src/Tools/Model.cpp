@@ -2,7 +2,7 @@
 #include <iostream>
 #include <fstream>
 
-Model::Model(const char* file, const char* folder)
+Model::Model(const char* file, const char* folder, unsigned int instances, std::vector<glm::mat4> instanceMatrix)
 {
 	std::string text = ParseFile(file);
 	mJson = json::parse(text);
@@ -10,6 +10,9 @@ Model::Model(const char* file, const char* folder)
 	mFile = file;
 	mFolder = folder;
 	mData = GetData();
+	mInstances = instances;
+	mInstanceMatrix = instanceMatrix;
+
 	TraverseNode(0);
 }
 
@@ -39,7 +42,7 @@ void Model::LoadMesh(unsigned int meshInd)
 	std::vector<Vertex> vertices = AssembleVertices(positions, normals, texUVs);
 	std::vector<unsigned int> indices = GetIndices(mJson["accessors"][indAccInd]);
 
-	mMeshes.emplace_back(Mesh(vertices, indices, textures));
+	mMeshes.emplace_back(Mesh(vertices, indices, textures, mInstances, mInstanceMatrix));
 }
 
 void Model::TraverseNode(unsigned int nextNode, glm::mat4 matrix)

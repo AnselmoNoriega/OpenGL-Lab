@@ -8,6 +8,14 @@ VertexBuffer::VertexBuffer(std::vector<Vertex>& vertices)
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 }
 
+
+VertexBuffer::VertexBuffer(std::vector<glm::mat4>& mat4s)
+{
+	glGenBuffers(1, &mID);
+	glBindBuffer(GL_ARRAY_BUFFER, mID);
+	glBufferData(GL_ARRAY_BUFFER, mat4s.size() * sizeof(Vertex), mat4s.data(), GL_STATIC_DRAW);
+}
+
 VertexBuffer::~VertexBuffer()
 {
 	glDeleteBuffers(1, &mID);

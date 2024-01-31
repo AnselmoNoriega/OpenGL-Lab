@@ -3,14 +3,10 @@
 out
 vec4 color;
 
-in
-vec3 crntPos;
-in
-vec3 shapeColor;
-in
-vec3 normal;
-in
-vec2 textureCoord;
+in vec3 crntPos;
+in vec3 shapeColor;
+in vec3 normal;
+in vec2 textureCoord;
 
 uniform sampler2D diffuse0;
 uniform sampler2D specular0;

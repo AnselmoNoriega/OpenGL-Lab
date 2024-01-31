@@ -15,6 +15,7 @@ class VertexBuffer
 {
 public:
 	VertexBuffer(std::vector<Vertex>& vertices);
+	VertexBuffer(std::vector<glm::mat4>& mat4s);
 	~VertexBuffer();
 
 	void Bind();

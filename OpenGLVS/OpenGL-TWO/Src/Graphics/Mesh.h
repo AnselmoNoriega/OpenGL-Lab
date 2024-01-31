@@ -9,7 +9,15 @@ class Camera;
 class Mesh
 {
 public:
-	Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, std::vector<Texture>& textures);
+	Mesh
+	(
+		std::vector<Vertex>& vertices, 
+		std::vector<unsigned int>& indices, 
+		std::vector<Texture>& textures,
+		unsigned int instances = 1,
+		std::vector<glm::mat4> instanceMatrix = {}
+	);
+
 	void Delete();
 
 	void Draw
@@ -31,5 +39,7 @@ private:
 	VertexArray mVertexArray;
 
 	unsigned int mCamID;
+
+	unsigned int mInstances;
 };
 

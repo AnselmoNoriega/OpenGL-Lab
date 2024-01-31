@@ -14,7 +14,7 @@ using json = nlohmann::json;
 class Model
 {
 public:
-	Model(const char* file, const char* folder = "");
+	Model(const char* file, const char* folder = "", unsigned int instances = 1, std::vector<glm::mat4> instanceMatrix = {});
 	void Delete();
 
 	void Update(Shader& shader, Camera& camera);
@@ -22,6 +22,7 @@ public:
 private:
 	const char* mFile;
 	const char* mFolder;
+	unsigned int mInstances;
 	std::vector<unsigned char> mData;
 	nlohmann::json mJson; 
 
@@ -30,6 +31,7 @@ private:
 	std::vector<glm::quat> mRotationsMeshes;
 	std::vector<glm::vec3> mScalesMeshes;
 	std::vector<glm::mat4> mMatricesMeshes;
+	std::vector<glm::mat4> mInstanceMatrix;
 
 	std::vector<std::string>mLoadedTexName;
 	std::vector<Texture> mLoadedTex;
