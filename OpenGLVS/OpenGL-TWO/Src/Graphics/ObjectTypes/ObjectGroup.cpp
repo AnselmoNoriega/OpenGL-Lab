@@ -41,7 +41,7 @@ void ObjectGroup::AddModel
 	std::vector<glm::mat4> instanceMatrix
 )
 {
-	mModels.emplace_back(Model(file, folder), instances, instanceMatrix);
+	mModels.emplace_back(Model(file, folder, instances, instanceMatrix));
 }
 
 void ObjectGroup::AddFlatModel
@@ -51,7 +51,7 @@ void ObjectGroup::AddFlatModel
 	std::vector<glm::mat4> instanceMatrix
 )
 {
-	mFlatModels.emplace_back(Model(file, folder), instances, instanceMatrix);
+	mFlatModels.emplace_back(Model(file, folder, instances, instanceMatrix));
 }
 
 ObjectGroup::~ObjectGroup()
