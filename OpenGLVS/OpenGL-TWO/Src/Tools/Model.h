@@ -14,7 +14,13 @@ using json = nlohmann::json;
 class Model
 {
 public:
-	Model(const char* file, const char* folder = "", unsigned int instances = 1, std::vector<glm::mat4> instanceMatrix = {});
+	Model
+	(
+		const char* file, const char* folder = "", 
+		unsigned int instances = 1, 
+		std::vector<glm::mat4> instanceMatrix = {}
+	);
+
 	void Delete();
 
 	void Update(Shader& shader, Camera& camera);

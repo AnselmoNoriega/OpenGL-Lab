@@ -29,9 +29,6 @@ int main()
 	glViewport(0, 0, winSize.first, winSize.second);
 	glClearColor(0.9f, 0.7f, 1.0f, 1.0f);
 
-	/*glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_BLEND);*/
-
 	Camera camera(winSize.first, winSize.second, glm::vec3(0.0f, 0.0f, 2.0f));
 	camera.SetMatrix(45.0f, 0.1f, 100.0f);
 

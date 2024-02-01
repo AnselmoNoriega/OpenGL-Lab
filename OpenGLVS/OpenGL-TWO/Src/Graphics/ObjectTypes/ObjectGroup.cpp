@@ -1,7 +1,7 @@
 #include "ObjectGroup.h"
 #include "UniformHandler.h"
 
-ObjectGroup::ObjectGroup(const char* shaderFolder):
+ObjectGroup::ObjectGroup(const char* shaderFolder) :
 	mShader(shaderFolder)
 {
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -34,14 +34,24 @@ void ObjectGroup::Update(Camera& camera)
 	}
 }
 
-void ObjectGroup::AddModel(const char* file, const char* folder)
+void ObjectGroup::AddModel
+(
+	const char* file, const char* folder,
+	unsigned int instances,
+	std::vector<glm::mat4> instanceMatrix
+)
 {
-	mModels.emplace_back(Model(file, folder));
+	mModels.emplace_back(Model(file, folder), instances, instanceMatrix);
 }
 
-void ObjectGroup::AddFlatModel(const char* file, const char* folder)
+void ObjectGroup::AddFlatModel
+(
+	const char* file, const char* folder,
+	unsigned int instances,
+	std::vector<glm::mat4> instanceMatrix
+)
 {
-	mFlatModels.emplace_back(Model(file, folder));
+	mFlatModels.emplace_back(Model(file, folder), instances, instanceMatrix);
 }
 
 ObjectGroup::~ObjectGroup()

@@ -14,8 +14,19 @@ public:
 
 	void Update(Camera& camera);
 
-	void AddModel(const char* file, const char* folder = "");
-	void AddFlatModel(const char* file, const char* folder = "");
+	void AddModel
+	(
+		const char* file, const char* folder,
+		unsigned int instances = 1,
+		std::vector<glm::mat4> instanceMatrix = {}
+	);
+
+	void AddFlatModel
+	(
+		const char* file, const char* folder,
+		unsigned int instances = 1,
+		std::vector<glm::mat4> instanceMatrix = {}
+	);
 
 private:
 	Shader mShader;

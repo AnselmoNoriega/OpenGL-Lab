@@ -2,7 +2,12 @@
 #include <iostream>
 #include <fstream>
 
-Model::Model(const char* file, const char* folder, unsigned int instances, std::vector<glm::mat4> instanceMatrix)
+Model::Model
+(
+	const char* file, const char* folder, 
+	unsigned int instances, 
+	std::vector<glm::mat4> instanceMatrix
+)
 {
 	std::string text = ParseFile(file);
 	mJson = json::parse(text);
