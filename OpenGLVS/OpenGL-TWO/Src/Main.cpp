@@ -39,7 +39,7 @@ int main()
 
 	SkyBox skyBox("Skybox", winSize.first, winSize.second);
 
-	FrameBuffer frameBuffer("PostProcessing", winSize.first, winSize.second);
+	FrameBuffer frameBuffer("PostProcessing", winSize.first, winSize.second, 32);
 
 	while (!glfwWindowShouldClose(window))
 	{

@@ -29,14 +29,19 @@ vec4 PointLight()
 
     vec3 myNormal = normalize(normal);
     vec3 lightDir = normalize(lightVec);
-
     float diffuse = max(dot(myNormal, lightDir), 0.0f);
 
-    float specularLight = 0.5f;
-    vec3 viewDirection = normalize(_camPos - crntPos);
-    vec3 reflectionDir = reflect(-lightDir, myNormal);
-    float specAmount = pow(max(dot(viewDirection, reflectionDir), 0.0f), 16);
-    float specular = specAmount * specularLight;
+    if(diffuse != 0.0f)
+    {
+        float specularLight = 0.5f;
+        vec3 viewDirection = normalize(_camPos - crntPos);
+        vec3 reflectionDir = reflect(-lightDir, myNormal);
+
+        vec3 halfwayVec = normalize(viewDirection + lightDir);
+
+        float specAmount = pow(max(dot(myNormal, halfwayVec), 0.0f), 16);
+        float specular = specAmount * specularLight;
+    };
 
     return (texture(diffuse0, textureCoord) * (diffuse * inten + ambient) + texture(specular0, textureCoord).r * specular * inten) * _lightColor;
 }
@@ -52,12 +57,12 @@ vec4 DirectLight()
 
     vec3 myNormal = normalize(normal);
     vec3 lightDir = normalize(vec3(1.0f, 1.0f, 0.0f));
-
     float diffuse = max(abs(dot(myNormal, lightDir)), 0.0f);
 
     float specularLight = 0.5f;
     vec3 viewDirection = normalize(_camPos - crntPos);
     vec3 reflectionDir = reflect(-lightDir, myNormal);
+
     float specAmount = pow(max(dot(viewDirection, reflectionDir), 0.0f), 16);
     float specular = specAmount * specularLight;
     
@@ -73,12 +78,12 @@ vec4 SpotLight()
 
     vec3 myNormal = normalize(normal);
     vec3 lightDir = normalize(_lightPos - crntPos);
-
     float diffuse = max(dot(myNormal, lightDir), 0.0f);
 
     float specularLight = 0.5f;
     vec3 viewDirection = normalize(_camPos - crntPos);
     vec3 reflectionDir = reflect(-lightDir, myNormal);
+
     float specAmount = pow(max(dot(viewDirection, reflectionDir), 0.0f), 16);
     float specular = specAmount * specularLight;
 
