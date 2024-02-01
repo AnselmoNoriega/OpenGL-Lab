@@ -17,8 +17,8 @@ Vertex rectangleVertices[] =
 };
 std::vector<Vertex> frameRec(rectangleVertices, rectangleVertices + sizeof(rectangleVertices) / sizeof(Vertex));
 
-FrameBuffer::FrameBuffer(const char* vertexShader, const char* fragmentShader, int winWidth, int winHeight, int samplesNum):
-	mShader(vertexShader, fragmentShader), mVertexBuffer(frameRec)
+FrameBuffer::FrameBuffer(const char* shaderFolder, int winWidth, int winHeight, int samplesNum):
+	mShader(shaderFolder), mVertexBuffer(frameRec)
 {
 	mShader.UseProgram();
 	glUniform1i(UniformHandler::GetUniformLocation(mShader.GetID(), "screenTexture"), 0);

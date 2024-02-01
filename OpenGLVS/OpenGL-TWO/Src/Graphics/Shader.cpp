@@ -5,10 +5,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-Shader::Shader(const char* vertFile, const char* fragFile)
+Shader::Shader(const char* folder)
 {
-	std::string vertexCode = ParseFile(vertFile);
-	std::string fragmentCode = ParseFile(fragFile);
+	std::string vertexCode = ParseFile(folder + std::string("/Vertex.shader"));
+	std::string fragmentCode = ParseFile(folder + std::string("/Fragment.shader"));
 
 	const char* vertexSource = vertexCode.c_str();
 	const char* fragmentSource = fragmentCode.c_str();
@@ -69,9 +69,9 @@ void Shader::Check4Errors(unsigned int shader, const char* type)
 	}
 }
 
-std::string Shader::ParseFile(const char* fileName)
+std::string Shader::ParseFile(std::string fileName)
 {
-	std::string path = std::string("Res/Shaders/") + fileName;
+	std::string path = "Res/Shaders/" + fileName;
 	std::ifstream in(path, std::ios::binary);
 	if (in)
 	{

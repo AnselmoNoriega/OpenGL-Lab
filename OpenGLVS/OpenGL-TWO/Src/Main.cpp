@@ -35,18 +35,14 @@ int main()
 	Camera camera(winSize.first, winSize.second, glm::vec3(0.0f, 0.0f, 2.0f));
 	camera.SetMatrix(45.0f, 0.1f, 100.0f);
 
-	Shader skyboxShader("VertexSkybox.shader", "FragmentSkybox.shader");
-	skyboxShader.UseProgram();
-	glUniform1i(glGetUniformLocation(skyboxShader.GetID(), "skybox"), 0);
-
-	ObjectGroup objects("VertexShader.shader", "FragmentShader.shader");
+	ObjectGroup objects("Normal");
 	objects.AddModel("Bird/scene.gltf", "Bird/");
 	objects.AddFlatModel("Grass/scene.gltf", "Grass/");
 	objects.AddModel("Ground2/scene.gltf", "Ground2/");
 
-	SkyBox skyBox("VertexSkybox.shader", "FragmentSkybox.shader", winSize.first, winSize.second);
+	SkyBox skyBox("Skybox", winSize.first, winSize.second);
 
-	FrameBuffer frameBuffer("VertexBasic.shader", "FragmentBasic.shader", winSize.first, winSize.second);
+	FrameBuffer frameBuffer("PostProcessing", winSize.first, winSize.second);
 
 	while (!glfwWindowShouldClose(window))
 	{

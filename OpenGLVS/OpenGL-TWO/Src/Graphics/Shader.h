@@ -4,7 +4,7 @@
 class Shader
 {
 public:
-	Shader(const char* vertFile, const char* fragFile);
+	Shader(const char* folder);
 	~Shader();
 
 	void UseProgram();
@@ -12,7 +12,7 @@ public:
 	unsigned int GetID();
 
 private:
-	std::string ParseFile(const char* fileName);
+	std::string ParseFile(std::string fileName);
 	void Check4Errors(unsigned int shader, const char* type);
 
 	unsigned int mID;

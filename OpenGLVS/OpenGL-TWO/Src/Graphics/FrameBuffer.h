@@ -7,7 +7,7 @@
 class FrameBuffer
 {
 public:
-	FrameBuffer(const char* vertexShader, const char* fragmentShader, int winWidth, int winHeight, int samplesNum = 8);
+	FrameBuffer(const char* shaderFolder, int winWidth, int winHeight, int samplesNum = 8);
 
 	void Bind();
 

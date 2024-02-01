@@ -7,7 +7,7 @@ class Camera;
 class SkyBox
 {
 public:
-	SkyBox(const char* vertexShader, const char* fragmentShader, int screenWidth, int screenHeight);
+	SkyBox(const char* shaderFolder, int screenWidth, int screenHeight);
 	~SkyBox();
 
 	void Update(Camera& camera);

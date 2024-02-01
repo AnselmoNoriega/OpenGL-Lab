@@ -9,7 +9,7 @@ class Camera;
 class ObjectGroup
 {
 public:
-	ObjectGroup(const char* vertexShader, const char* fragmentShader);
+	ObjectGroup(const char* shaderFolder);
 	~ObjectGroup();
 
 	void Update(Camera& camera);

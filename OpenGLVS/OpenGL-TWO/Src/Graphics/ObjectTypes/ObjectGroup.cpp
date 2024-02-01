@@ -1,8 +1,8 @@
 #include "ObjectGroup.h"
 #include "UniformHandler.h"
 
-ObjectGroup::ObjectGroup(const char* vertexShader, const char* fragmentShader):
-	mShader(vertexShader, fragmentShader)
+ObjectGroup::ObjectGroup(const char* shaderFolder):
+	mShader(shaderFolder)
 {
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 

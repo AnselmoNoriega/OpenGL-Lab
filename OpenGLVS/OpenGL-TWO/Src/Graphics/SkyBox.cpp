@@ -12,8 +12,8 @@
 #include <glad/glad.h>
 #include <iostream>
 
-SkyBox::SkyBox(const char* vertexShader, const char* fragmentShader, int screenWidth, int screenHeight):
-	mShader(vertexShader, fragmentShader), mScreenWidth(screenWidth), mScreenHeight(screenHeight)
+SkyBox::SkyBox(const char* shaderFolder, int screenWidth, int screenHeight):
+	mShader(shaderFolder), mScreenWidth(screenWidth), mScreenHeight(screenHeight)
 {
 	Vertex skyboxVertices[] =
 	{
