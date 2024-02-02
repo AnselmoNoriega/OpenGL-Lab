@@ -18,10 +18,11 @@ Vertex rectangleVertices[] =
 std::vector<Vertex> frameRec(rectangleVertices, rectangleVertices + sizeof(rectangleVertices) / sizeof(Vertex));
 
 FrameBuffer::FrameBuffer(const char* shaderFolder, int winWidth, int winHeight, int samplesNum):
-	mShader(shaderFolder), mVertexBuffer(frameRec)
+	mShader(shaderFolder), mVertexBuffer(frameRec), mGammaValue(2.2f)
 {
 	mShader.UseProgram();
 	glUniform1i(UniformHandler::GetUniformLocation(mShader.GetID(), "screenTexture"), 0);
+	glUniform1f(UniformHandler::GetUniformLocation(mShader.GetID(), "gamma"), mGammaValue);
 
 	mVertexArray.Bind();
 	mVertexArray.LinkVertexBuffer(mVertexBuffer, 0, 3, sizeof(Vertex), (void*)(offsetof(Vertex, Position)));
@@ -33,7 +34,7 @@ FrameBuffer::FrameBuffer(const char* shaderFolder, int winWidth, int winHeight, 
 	unsigned int frameTexture;
 	glGenTextures(1, &frameTexture);
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, frameTexture);
-	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samplesNum, GL_RGB, winWidth, winHeight, GL_TRUE);
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samplesNum, GL_RGB16F, winWidth, winHeight, GL_TRUE);
 	glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -58,7 +59,7 @@ FrameBuffer::FrameBuffer(const char* shaderFolder, int winWidth, int winHeight, 
 
 	glGenTextures(1, &mPostProcessingTextureID);
 	glBindTexture(GL_TEXTURE_2D, mPostProcessingTextureID);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, winWidth, winHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, winWidth, winHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -90,4 +91,16 @@ void FrameBuffer::Update(int width, int height)
 	glDisable(GL_DEPTH_TEST);
 	glBindTexture(GL_TEXTURE_2D, mPostProcessingTextureID);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+}
+
+void FrameBuffer::SetGammaValue(float gammaValue)
+{
+	mGammaValue = gammaValue;
+	mShader.UseProgram();
+	glUniform1i(UniformHandler::GetUniformLocation(mShader.GetID(), "gamma"), mGammaValue);
+}
+
+float FrameBuffer::GetGammaValue()
+{
+	return mGammaValue;
 }

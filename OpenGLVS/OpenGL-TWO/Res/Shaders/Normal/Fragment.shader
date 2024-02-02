@@ -31,6 +31,7 @@ vec4 PointLight()
     vec3 lightDir = normalize(lightVec);
     float diffuse = max(dot(myNormal, lightDir), 0.0f);
 
+    float specular = 0.0f;
     if(diffuse != 0.0f)
     {
         float specularLight = 0.5f;
@@ -40,7 +41,7 @@ vec4 PointLight()
         vec3 halfwayVec = normalize(viewDirection + lightDir);
 
         float specAmount = pow(max(dot(myNormal, halfwayVec), 0.0f), 16);
-        float specular = specAmount * specularLight;
+        specular = specAmount * specularLight;
     };
 
     return (texture(diffuse0, textureCoord) * (diffuse * inten + ambient) + texture(specular0, textureCoord).r * specular * inten) * _lightColor;

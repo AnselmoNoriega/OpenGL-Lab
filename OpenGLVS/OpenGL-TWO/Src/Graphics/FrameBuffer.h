@@ -13,6 +13,9 @@ public:
 
 	void Update(int width, int height);
 
+	void SetGammaValue(float gammaValue);
+	float GetGammaValue();
+
 private:
 	Shader mShader;
 	VertexArray mVertexArray;
@@ -21,5 +24,7 @@ private:
 	unsigned int mSampleID;
 	unsigned int mPostProcessingID;
 	unsigned int mPostProcessingTextureID;
+
+	float mGammaValue;
 };
 

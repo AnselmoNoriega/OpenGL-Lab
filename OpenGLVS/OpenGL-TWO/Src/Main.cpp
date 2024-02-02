@@ -27,7 +27,6 @@ int main()
 
 	gladLoadGL();
 	glViewport(0, 0, winSize.first, winSize.second);
-	glClearColor(0.9f, 0.7f, 1.0f, 1.0f);
 
 	Camera camera(winSize.first, winSize.second, glm::vec3(0.0f, 0.0f, 2.0f));
 	camera.SetMatrix(45.0f, 0.1f, 100.0f);
@@ -40,6 +39,10 @@ int main()
 	SkyBox skyBox("Skybox", winSize.first, winSize.second);
 
 	FrameBuffer frameBuffer("PostProcessing", winSize.first, winSize.second, 32);
+	{
+		float gammaVal = frameBuffer.GetGammaValue();
+		glClearColor(std::pow(0.9f, gammaVal), std::pow(0.7f, gammaVal), std::pow(1.0f, gammaVal), 1.0f);
+	}
 
 	while (!glfwWindowShouldClose(window))
 	{
