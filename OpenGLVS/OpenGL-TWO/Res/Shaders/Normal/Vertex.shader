@@ -12,11 +12,14 @@ out vec3 normal;
 layout(location = 3) in vec2 _texture2D;
 out vec2 textureCoord;
 
+out vec4 fragPosLight;
+
 uniform mat4 _mvp;
 uniform mat4 _model;
 uniform mat4 translation;
 uniform mat4 rotation;
 uniform mat4 scale;
+uniform mat4 lightProj;
 
 void main()
 {
@@ -24,6 +27,7 @@ void main()
     shapeColor = _color;
     normal = _normal;
     textureCoord = mat2(0.0, -1.0, 1.0, 0.0) * _texture2D;
+    fragPosLight = lightProj * vec4(crntPos, 1.0f);
 
     gl_Position = _mvp * vec4(crntPos, 1.0);
 };

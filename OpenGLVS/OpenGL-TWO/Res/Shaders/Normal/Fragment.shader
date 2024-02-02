@@ -7,9 +7,11 @@ in vec3 crntPos;
 in vec3 shapeColor;
 in vec3 normal;
 in vec2 textureCoord;
+in vec4 fragPosLight;
 
 uniform sampler2D diffuse0;
 uniform sampler2D specular0;
+uniform sampler2D shadowMap;
 uniform vec4 _lightColor;
 uniform vec3 _lightPos;
 uniform vec3 _camPos;
@@ -66,8 +68,33 @@ vec4 DirectLight()
 
     float specAmount = pow(max(dot(viewDirection, reflectionDir), 0.0f), 16);
     float specular = specAmount * specularLight;
+
+    float shadow = 0.0f;
+    vec3 lightCoords = fragPosLight.xyz / fragPosLight.w;
+    if(lightCoords.z <= 1.0f)
+    {
+        lightCoords = (lightCoords + 1.0f) / 2.0f;
+        float currentDepth = lightCoords.z;
+        float bias = max(0.25f * (1.0f - dot(myNormal, lightDir)), 0.005f);
+
+        int sampleRadius = 2;
+        vec2 pixelSize = 1.0 / textureSize(shadowMap, 0);
+        for(int x = -sampleRadius; x <= sampleRadius; ++x)
+        {
+            for(int y = -sampleRadius; y <= sampleRadius; ++y)
+            {
+                float closestDepth = texture(shadowMap, lightCoords.xy + vec2(x, y) * pixelSize).r;
+                if(currentDepth > closestDepth + bias)
+                {
+                    shadow += 1.0f;
+                }
+            }
+        }
+
+        shadow /= pow((sampleRadius * 2 + 1), 2);
+    }
     
-    return (texture(diffuse0, textureCoord) * (diffuse + ambient) + texture(specular0, textureCoord).r * specular) * _lightColor;
+    return (texture(diffuse0, textureCoord) * (diffuse * (1.0f - shadow) + ambient) + texture(specular0, textureCoord).r * specular) * _lightColor;
 }
 
 vec4 SpotLight()

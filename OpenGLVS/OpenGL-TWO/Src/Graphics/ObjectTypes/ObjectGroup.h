@@ -12,6 +12,7 @@ public:
 	ObjectGroup(const char* shaderFolder);
 	~ObjectGroup();
 
+	void ShadowMapUpdate(Camera& camera, unsigned int winWidth, unsigned int winHeight);
 	void Update(Camera& camera);
 
 	void AddModel
@@ -30,7 +31,15 @@ public:
 
 private:
 	Shader mShader;
+	Shader mShadowMapShader;
 	std::vector<Model> mModels;
 	std::vector<Model> mFlatModels;
+
+	glm::mat4 lightProj;
+	unsigned int mShadowMap;
+	unsigned int mShadowMapTex;
+
+	unsigned int mShadowMapWidth;
+	unsigned int mShadowMapHeight;
 };
 
