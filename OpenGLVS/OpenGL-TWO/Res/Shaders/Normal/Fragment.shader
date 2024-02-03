@@ -59,15 +59,18 @@ vec4 DirectLight()
     float ambient = 0.2f;
 
     vec3 myNormal = normalize(normal);
-    vec3 lightDir = normalize(vec3(1.0f, 1.0f, 0.0f));
+    vec3 lightDir = normalize(_lightPos);
     float diffuse = max(abs(dot(myNormal, lightDir)), 0.0f);
 
-    float specularLight = 0.5f;
-    vec3 viewDirection = normalize(_camPos - crntPos);
-    vec3 reflectionDir = reflect(-lightDir, myNormal);
-
-    float specAmount = pow(max(dot(viewDirection, reflectionDir), 0.0f), 16);
-    float specular = specAmount * specularLight;
+    float specular = 0.0f;
+    if(diffuse != 0.0f)
+    {
+        float specularLight = 0.5f;
+        vec3 viewDirection = normalize(_camPos - crntPos);
+        vec3 halfwayVec = normalize(viewDirection + lightDir);
+        float specAmt = pow(max(dot(myNormal, halfwayVec), 0.0f), 16);
+        specular = specAmt * specularLight;
+    }
 
     float shadow = 0.0f;
     vec3 lightCoords = fragPosLight.xyz / fragPosLight.w;
@@ -75,13 +78,13 @@ vec4 DirectLight()
     {
         lightCoords = (lightCoords + 1.0f) / 2.0f;
         float currentDepth = lightCoords.z;
-        float bias = max(0.25f * (1.0f - dot(myNormal, lightDir)), 0.005f);
+        float bias = max(0.025f * (1.0f - dot(myNormal, lightDir)), 0.0005f);
 
         int sampleRadius = 2;
         vec2 pixelSize = 1.0 / textureSize(shadowMap, 0);
-        for(int x = -sampleRadius; x <= sampleRadius; ++x)
+        for(int y = -sampleRadius; y <= sampleRadius; ++y)
         {
-            for(int y = -sampleRadius; y <= sampleRadius; ++y)
+            for(int x = -sampleRadius; x <= sampleRadius; ++x)
             {
                 float closestDepth = texture(shadowMap, lightCoords.xy + vec2(x, y) * pixelSize).r;
                 if(currentDepth > closestDepth + bias)
@@ -94,13 +97,18 @@ vec4 DirectLight()
         shadow /= pow((sampleRadius * 2 + 1), 2);
     }
     
-    return (texture(diffuse0, textureCoord) * (diffuse * (1.0f - shadow) + ambient) + texture(specular0, textureCoord).r * specular) * _lightColor;
+    return (texture(diffuse0, textureCoord) * (diffuse * (1.0f - shadow) + ambient) + texture(specular0, textureCoord).r * specular * (1.0f - shadow)) * _lightColor;
 }
 
 vec4 SpotLight()
 {
+    if (texture(diffuse0, textureCoord).a < 0.1)
+    {
+        discard;
+    }
+
     float outerCone = 0.9f;
-    float innerCone = 1.0f;
+    float innerCone = 0.95f;
 
     float ambient = 0.2f;
 
@@ -108,17 +116,46 @@ vec4 SpotLight()
     vec3 lightDir = normalize(_lightPos - crntPos);
     float diffuse = max(dot(myNormal, lightDir), 0.0f);
 
-    float specularLight = 0.5f;
-    vec3 viewDirection = normalize(_camPos - crntPos);
-    vec3 reflectionDir = reflect(-lightDir, myNormal);
+    float specular = 0.0f;
+    if(diffuse != 0)
+    {
+        float specularLight = 0.50f;
+        vec3 viewDirection = normalize(_camPos - crntPos);
+        vec3 halfwayVec = normalize(viewDirection + lightDir);
+        float specAmt = pow(max(dot(myNormal, halfwayVec), 0.0f), 16);
+        specular = specAmt * specularLight;
+    }
 
-    float specAmount = pow(max(dot(viewDirection, reflectionDir), 0.0f), 16);
-    float specular = specAmount * specularLight;
-
-    float angle = dot(vec3(0.0f, 0.0f, -1.0f), -lightDir);
+    float angle = dot(vec3(0.0f, -1.0f, 0.0f), -lightDir);
     float inten = clamp((angle - outerCone) / (innerCone - outerCone), 0.0f, 1.0f);
 
-    return (texture(diffuse0, textureCoord) * (diffuse * inten + ambient) + texture(specular0, textureCoord).r * specular * inten) * _lightColor;
+    
+    float shadow = 0.0f;
+    vec3 lightCoords = fragPosLight.xyz / fragPosLight.w;
+    if(lightCoords.z <= 1.0f)
+    {
+        lightCoords = (lightCoords + 1.0f) / 2.0f;
+        float currentDepth = lightCoords.z;
+        float bias = max(0.00025f * (1.0f - dot(myNormal, lightDir)), 0.000005f);
+
+        int sampleRadius = 2;
+        vec2 pixelSize = 1.0 / textureSize(shadowMap, 0);
+        for(int y = -sampleRadius; y <= sampleRadius; ++y)
+        {
+            for(int x = -sampleRadius; x <= sampleRadius; ++x)
+            {
+                float closestDepth = texture(shadowMap, lightCoords.xy + vec2(x, y) * pixelSize).r;
+                if(currentDepth > closestDepth + bias)
+                {
+                    shadow += 1.0f;
+                }
+            }
+        }
+
+        shadow /= pow((sampleRadius * 2 + 1), 2);
+    }
+
+    return (texture(diffuse0, textureCoord) * (diffuse * (1.0f - shadow) * inten + ambient) + texture(specular0, textureCoord).r * specular * (1.0f - shadow) * inten) * _lightColor;
 }
 
 float LinearizeDepth(float depth)
@@ -142,6 +179,6 @@ vec4 FogEffect()
 
 void main()
 {
-    color = DirectLight();
+    color = SpotLight();
 
 }
