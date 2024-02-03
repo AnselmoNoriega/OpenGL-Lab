@@ -53,15 +53,62 @@ Mesh::Mesh
 	eB.Unbind();
 }
 
+Mesh::Mesh
+(
+	std::vector<Vertex>& vertices,
+	std::vector<unsigned int>& indices,
+	unsigned int instances,
+	std::vector<glm::mat4> instanceMatrix
+)
+{
+	mVertices = vertices;
+	mIndices = indices;
+	mInstances = instances;
+
+	mVertexArray.Bind();
+
+	VertexBuffer vB(vertices);
+
+	ElementBuffer eB(indices);
+
+	mVertexArray.LinkVertexBuffer(vB, 0, 3, sizeof(Vertex), (void*)(offsetof(Vertex, Position)));
+	mVertexArray.LinkVertexBuffer(vB, 1, 3, sizeof(Vertex), (void*)(offsetof(Vertex, Color)));
+	mVertexArray.LinkVertexBuffer(vB, 2, 3, sizeof(Vertex), (void*)(offsetof(Vertex, Normal)));
+	mVertexArray.LinkVertexBuffer(vB, 3, 2, sizeof(Vertex), (void*)(offsetof(Vertex, TextUV)));
+
+	if (instances > 1)
+	{
+		VertexBuffer instancesVB(instanceMatrix);
+		instancesVB.Bind();
+
+		mVertexArray.LinkVertexBuffer(instancesVB, 4, 4, sizeof(glm::mat4), (void*)0);
+		mVertexArray.LinkVertexBuffer(instancesVB, 5, 4, sizeof(glm::mat4), (void*)(1 * sizeof(glm::vec4)));
+		mVertexArray.LinkVertexBuffer(instancesVB, 6, 4, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+		mVertexArray.LinkVertexBuffer(instancesVB, 7, 4, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+
+		glVertexAttribDivisor(4, 1);
+		glVertexAttribDivisor(5, 1);
+		glVertexAttribDivisor(6, 1);
+		glVertexAttribDivisor(7, 1);
+		instancesVB.Unbind();
+	}
+
+	mVertexArray.Unbind();
+
+	vB.Unbind();
+
+	eB.Unbind();
+}
+
 void Mesh::Draw
 (
 	Shader& shader,
 	Camera& camera,
+	bool isLightShader,
 	glm::mat4 matrix,
 	glm::vec3 translation,
 	glm::quat rotation,
-	glm::vec3 scale,
-	bool isLightShader
+	glm::vec3 scale
 )
 {
 	shader.UseProgram();
@@ -91,6 +138,10 @@ void Mesh::Draw
 		}
 
 		glUniform3f(UniformHandler::GetUniformLocation(shader.GetID(), "_camPos"), camera.GetPos().x, camera.GetPos().y, camera.GetPos().z);
+	}
+	else
+	{
+		glUniform4f(UniformHandler::GetUniformLocation(shader.GetID(), "_lightColor"), 1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
 	camera.Update(shader, "_mvp");

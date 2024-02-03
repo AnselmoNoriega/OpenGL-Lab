@@ -25,7 +25,7 @@ void Model::Update(Shader& shader, Camera& camera)
 {
 	for (unsigned int i = 0; i < mMeshes.size(); ++i)
 	{
-		mMeshes[i].Draw(shader, camera, mMatricesMeshes[i], mTranslationsMeshes[i], mRotationsMeshes[i]);
+		mMeshes[i].Draw(shader, camera, false, mMatricesMeshes[i], mTranslationsMeshes[i], mRotationsMeshes[i]);
 	}
 }
 

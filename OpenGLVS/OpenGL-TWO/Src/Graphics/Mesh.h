@@ -18,17 +18,26 @@ public:
 		std::vector<glm::mat4> instanceMatrix = {}
 	);
 
+
+	Mesh
+	(
+		std::vector<Vertex>& vertices,
+		std::vector<unsigned int>& indices,
+		unsigned int instances = 1,
+		std::vector<glm::mat4> instanceMatrix = {}
+	);
+
 	void Delete();
 
 	void Draw
 	(
 		Shader& shader, 
 		Camera& camera,
+		bool isLightShader = false,
 		glm::mat4 matrix = glm::mat4(1.0f),
 		glm::vec3 translation = glm::vec3(0.0f, 0.0f, 0.0f),
 		glm::quat rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.f),
-		glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f),
-		bool isLightShader = false
+		glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f)
 	);
 
 private:
