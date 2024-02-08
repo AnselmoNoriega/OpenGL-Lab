@@ -21,9 +21,18 @@ public:
 		std::vector<glm::mat4> instanceMatrix = {}
 	);
 
+	Model
+	(
+		glm::vec3 pos = glm::vec3(),
+		glm::mat4 matrix = glm::mat4(1.0f),
+		glm::vec3 rotation = glm::vec3()
+	);
+
 	void Delete();
 
-	void Update(Shader& shader, Camera& camera);
+	void Update(Shader& shader, Camera& camera, bool isLit = false);
+
+	void ChangePos(glm::vec3 pos);
 
 private:
 	const char* mFile;

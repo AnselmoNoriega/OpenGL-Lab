@@ -3,12 +3,12 @@
 #include "UniformHandler.h"
 
 ObjectGroup::ObjectGroup(const char* shaderFolder) :
-	mShader(shaderFolder), mShadowMapShader("ShadowMap"), mLightShader("Light"), mLightObj(LightInit())
+	mShader(shaderFolder), mShadowMapShader("ShadowMap"), mLightShader("Light")
 {
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	glm::vec3 lightPos = glm::vec3(19.0f, 6.0f, 0.5f);
-	mLightModel = glm::translate(glm::mat4(1.0f), lightPos);
+	glm::mat4 mLightModel = glm::translate(glm::mat4(1.0f), lightPos);
 	glm::vec3 objectPos = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::mat4 objectModel = glm::translate(glm::mat4(1.0f), objectPos);
 
@@ -40,12 +40,13 @@ ObjectGroup::ObjectGroup(const char* shaderFolder) :
 	float farPlane = 100.0f;
 	glm::mat4 orthogonalProjection = glm::ortho(-35.0f, 35.0f, -35.0f, 35.0f, 0.1f, farPlane);
 	glm::mat4 perspectivrProj = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, farPlane);
-	glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f, 55.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	lightProj = perspectivrProj * lightView;
 
 	mShadowMapShader.UseProgram();
 	glUniformMatrix4fv(UniformHandler::GetUniformLocation(mShadowMapShader.GetID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
 
+	mLightObj.ChangePos(lightPos);
 }
 
 void ObjectGroup::ShadowMapUpdate(Camera& camera, unsigned int winWidth, unsigned int winHeight)
@@ -80,7 +81,7 @@ void ObjectGroup::Update(Camera& camera)
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 
-	mLightObj.Draw(mLightShader, camera, true, mLightModel);
+	mLightObj.Update(mLightShader, camera, true);
 	for (int i = 0; i < mModels.size(); ++i)
 	{
 		mModels[i].Update(mShader, camera);
@@ -110,49 +111,6 @@ void ObjectGroup::AddFlatModel
 )
 {
 	mFlatModels.emplace_back(Model(file, folder, instances, instanceMatrix));
-}
-
-Mesh ObjectGroup::LightInit()
-{
-	Vertex verts[] =
-	{
-		Vertex(glm::vec3( 1.0f, -1.0f, 0.0f)),
-		Vertex(glm::vec3(-1.0f, -1.0f, 0.0f)),
-		Vertex(glm::vec3(-1.0f,  1.0f, 0.0f)),
-		Vertex(glm::vec3( 1.0f,  1.0f, 0.0f)),
-
-		Vertex(glm::vec3( 1.0f, -1.0f, 1.0f)),
-		Vertex(glm::vec3( 1.0f,  1.0f, 1.0f)),
-
-		Vertex(glm::vec3(-1.0f, -1.0f, 1.0f)),
-		Vertex(glm::vec3(-1.0f,  1.0f, 1.0f))
-	};
-
-	unsigned int indcs[] =
-	{
-		0, 1, 2,
-		2, 3, 0,
-
-		4, 0, 3,
-		3, 5, 4,
-
-		6, 4, 5,
-		5, 7, 6,
-
-		1, 6, 7,
-		7, 2, 1,
-
-		3, 2, 7,
-		7, 5, 3,
-
-		4, 6, 1, 
-		1, 0, 4
-	};
-
-	std::vector<Vertex> vertices(verts, verts + sizeof(verts) / sizeof(Vertex));
-	std::vector<unsigned int> indices(indcs, indcs + sizeof(indcs) / sizeof(unsigned int));
-
-	return Mesh(vertices, indices);
 }
 
 ObjectGroup::~ObjectGroup()

@@ -21,11 +21,71 @@ Model::Model
 	TraverseNode(0);
 }
 
-void Model::Update(Shader& shader, Camera& camera)
+Model::Model
+(
+	glm::vec3 pos,
+	glm::mat4 matrix,
+	glm::vec3 rotation
+)
+{
+	mMatricesMeshes.push_back(matrix);
+	mTranslationsMeshes.push_back(pos);
+	mRotationsMeshes.push_back(rotation);
+
+	Vertex verts[] =
+	{
+		Vertex(glm::vec3(1.0f, -1.0f, 0.0f)),
+		Vertex(glm::vec3(-1.0f, -1.0f, 0.0f)),
+		Vertex(glm::vec3(-1.0f,  1.0f, 0.0f)),
+		Vertex(glm::vec3(1.0f,  1.0f, 0.0f)),
+
+		Vertex(glm::vec3(1.0f, -1.0f, 1.0f)),
+		Vertex(glm::vec3(1.0f,  1.0f, 1.0f)),
+
+		Vertex(glm::vec3(-1.0f, -1.0f, 1.0f)),
+		Vertex(glm::vec3(-1.0f,  1.0f, 1.0f))
+	};
+
+	unsigned int indcs[] =
+	{
+		0, 1, 2,
+		2, 3, 0,
+
+		4, 0, 3,
+		3, 5, 4,
+
+		6, 4, 5,
+		5, 7, 6,
+
+		1, 6, 7,
+		7, 2, 1,
+
+		3, 2, 7,
+		7, 5, 3,
+
+		4, 6, 1,
+		1, 0, 4
+	};
+
+	std::vector<Vertex> vertices(verts, verts + sizeof(verts) / sizeof(Vertex));
+	std::vector<unsigned int> indices(indcs, indcs + sizeof(indcs) / sizeof(unsigned int));
+
+	mMeshes.emplace_back(Mesh(vertices, indices));
+}
+
+void Model::Update(Shader& shader, Camera& camera, bool isLit)
 {
 	for (unsigned int i = 0; i < mMeshes.size(); ++i)
 	{
-		mMeshes[i].Draw(shader, camera, false, mMatricesMeshes[i], mTranslationsMeshes[i], mRotationsMeshes[i]);
+		mMeshes[i].Draw(shader, camera, isLit, mMatricesMeshes[i], mTranslationsMeshes[i], mRotationsMeshes[i]);
+	}
+}
+
+void Model::ChangePos(glm::vec3 pos)
+{
+	for (unsigned int i = 0; i < mMeshes.size(); ++i)
+	{
+		mTranslationsMeshes[i] = pos;
 	}
 }
 

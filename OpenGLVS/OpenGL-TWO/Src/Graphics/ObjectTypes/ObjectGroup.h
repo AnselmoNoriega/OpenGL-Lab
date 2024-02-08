@@ -30,13 +30,8 @@ public:
 	);
 
 private:
-	Mesh LightInit();
-
-private:
-	Mesh mLightObj;
+	Model mLightObj;
 	Shader mLightShader;
-	VertexArray mLightVA;
-	glm::mat4 mLightModel;
 
 	Shader mShader;
 	Shader mShadowMapShader;
