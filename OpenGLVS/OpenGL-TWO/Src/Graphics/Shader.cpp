@@ -5,13 +5,15 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-Shader::Shader(const char* folder)
+Shader::Shader(const char* folder, bool hasGeometry)
 {
 	std::string vertexCode = ParseFile(folder + std::string("/Vertex.shader"));
 	std::string fragmentCode = ParseFile(folder + std::string("/Fragment.shader"));
+	std::string geometryCode = ParseFile(folder + std::string("/Geometry.shader"));
 
 	const char* vertexSource = vertexCode.c_str();
 	const char* fragmentSource = fragmentCode.c_str();
+	const char* geometrySource = geometryCode.c_str();
 
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &vertexSource, NULL);
@@ -26,6 +28,19 @@ Shader::Shader(const char* folder)
 	mID = glCreateProgram();
 	glAttachShader(mID, vertexShader);
 	glAttachShader(mID, fragmentShader);
+
+	if (hasGeometry)
+	{
+		GLuint geomShader = glCreateShader(GL_GEOMETRY_SHADER);
+		glShaderSource(geomShader, 1, &geometrySource, NULL);
+		glCompileShader(geomShader);
+		Check4Errors(geomShader, "Geometry");
+
+		glAttachShader(mID, geomShader);
+
+		glDeleteShader(geomShader);
+	}
+
 	glLinkProgram(mID);
 	Check4Errors(mID, "Program");
 

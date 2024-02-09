@@ -3,7 +3,7 @@
 #include "UniformHandler.h"
 
 ObjectGroup::ObjectGroup(const char* shaderFolder) :
-	mShader(shaderFolder), mShadowMapShader("ShadowMap"), mLightShader("Light")
+	mShader(shaderFolder), mShadowMapShader("ShadowMap"), mLightShader("Light"), farPlane(100.0f)
 {
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -37,7 +37,6 @@ ObjectGroup::ObjectGroup(const char* shaderFolder) :
 	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	float farPlane = 100.0f;
 	glm::mat4 orthogonalProjection = glm::ortho(-35.0f, 35.0f, -35.0f, 35.0f, 0.1f, farPlane);
 	glm::mat4 perspectivrProj = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, farPlane);
 	glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f, 55.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -47,13 +46,14 @@ ObjectGroup::ObjectGroup(const char* shaderFolder) :
 	glUniformMatrix4fv(UniformHandler::GetUniformLocation(mShadowMapShader.GetID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
 
 	mLightObj.ChangePos(lightPos);
+	mSpotLight.Initialize(mShadowMapWidth, mShadowMapHeight, farPlane, lightPos);
 }
 
 void ObjectGroup::ShadowMapUpdate(Camera& camera, unsigned int winWidth, unsigned int winHeight)
 {
 	glEnable(GL_DEPTH_TEST);
 	glViewport(0, 0, mShadowMapWidth, mShadowMapHeight);
-	glBindFramebuffer(GL_FRAMEBUFFER, mShadowMap);
+	/*glBindFramebuffer(GL_FRAMEBUFFER, mShadowMap);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
 	for (int i = 0; i < mModels.size(); ++i)
@@ -63,6 +63,17 @@ void ObjectGroup::ShadowMapUpdate(Camera& camera, unsigned int winWidth, unsigne
 	for (int i = 0; i < mFlatModels.size(); ++i)
 	{
 		mFlatModels[i].Update(mShadowMapShader, camera);
+	}*/
+	glBindFramebuffer(GL_FRAMEBUFFER, mSpotLight.GetFrameBuffer());
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	for (int i = 0; i < mModels.size(); ++i)
+	{
+		mModels[i].Update(mSpotLight.GetShader(), camera);
+	}
+	for (int i = 0; i < mFlatModels.size(); ++i)
+	{
+		mFlatModels[i].Update(mSpotLight.GetShader(), camera);
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -74,10 +85,16 @@ void ObjectGroup::Update(Camera& camera)
 {
 	mShader.UseProgram();
 	glUniformMatrix4fv(UniformHandler::GetUniformLocation(mShader.GetID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
+	glUniform1f(UniformHandler::GetUniformLocation(mShader.GetID(), "farPlane"), farPlane);
+
+	/*glActiveTexture(GL_TEXTURE0 + 2);
+	glBindTexture(GL_TEXTURE_2D, mShadowMapTex);
+	glUniform1i(UniformHandler::GetUniformLocation(mShader.GetID(), "shadowMap"), 2);*/
 
 	glActiveTexture(GL_TEXTURE0 + 2);
-	glBindTexture(GL_TEXTURE_2D, mShadowMapTex);
-	glUniform1i(UniformHandler::GetUniformLocation(mShader.GetID(), "shadowMap"), 2);
+	mSpotLight.BindTexture();
+	glUniform1i(UniformHandler::GetUniformLocation(mShader.GetID(), "shadowCubeMap"), 2);
+
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 

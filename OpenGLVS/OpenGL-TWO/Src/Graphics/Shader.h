@@ -4,7 +4,7 @@
 class Shader
 {
 public:
-	Shader(const char* folder);
+	Shader(const char* folder, bool hasGeometry = false);
 	~Shader();
 
 	void UseProgram();

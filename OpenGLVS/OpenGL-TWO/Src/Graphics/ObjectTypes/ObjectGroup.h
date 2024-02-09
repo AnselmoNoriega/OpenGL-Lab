@@ -3,6 +3,7 @@
 
 #include "Shader.h"
 #include "Model.h"
+#include "SpotLight.h"
 
 class Camera;
 
@@ -33,6 +34,8 @@ private:
 	Model mLightObj;
 	Shader mLightShader;
 
+	SpotLight mSpotLight;
+
 	Shader mShader;
 	Shader mShadowMapShader;
 	std::vector<Model> mModels;
@@ -44,5 +47,7 @@ private:
 
 	unsigned int mShadowMapWidth;
 	unsigned int mShadowMapHeight;
+
+	float farPlane;
 };
 
