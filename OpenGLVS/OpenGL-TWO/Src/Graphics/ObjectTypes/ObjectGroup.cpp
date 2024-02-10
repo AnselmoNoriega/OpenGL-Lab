@@ -3,11 +3,12 @@
 #include "UniformHandler.h"
 
 ObjectGroup::ObjectGroup(const char* shaderFolder) :
-	mShader(shaderFolder), mShadowMapShader("ShadowMap"), mLightShader("Light"), farPlane(100.0f)
+	mShader(shaderFolder), mShadowMapShader("ShadowMap"), mLightShader("Light"), farPlane(100.0f),
+	mShadowMapWidth(2048), mShadowMapHeight(2048)
 {
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-	glm::vec3 lightPos = glm::vec3(19.0f, 6.0f, 0.5f);
+	glm::vec3 lightPos = glm::vec3(10.0f, 13.0f, 0.5f);
 	glm::mat4 mLightModel = glm::translate(glm::mat4(1.0f), lightPos);
 	glm::vec3 objectPos = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::mat4 objectModel = glm::translate(glm::mat4(1.0f), objectPos);
@@ -39,7 +40,7 @@ ObjectGroup::ObjectGroup(const char* shaderFolder) :
 
 	glm::mat4 orthogonalProjection = glm::ortho(-35.0f, 35.0f, -35.0f, 35.0f, 0.1f, farPlane);
 	glm::mat4 perspectivrProj = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, farPlane);
-	glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f, 55.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	lightProj = perspectivrProj * lightView;
 
 	mShadowMapShader.UseProgram();

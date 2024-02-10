@@ -44,10 +44,7 @@ vec4 PointLight()
     {
         float specularLight = 0.5f;
         vec3 viewDirection = normalize(_camPos - crntPos);
-        vec3 reflectionDir = reflect(-lightDir, myNormal);
-
         vec3 halfwayVec = normalize(viewDirection + lightDir);
-
         float specAmount = pow(max(dot(myNormal, halfwayVec), 0.0f), 16);
         specular = specAmount * specularLight;
     };
@@ -58,14 +55,14 @@ vec4 PointLight()
     float bias = max(0.5f * (1.0f - dot(myNormal, lightDir)), 0.0005f);
 
     int sampleRadius = 2;
-    float pixelSize = 1.0f / 1024.0f;
-    for(int z = -sampleRadius; z <= sampleRadius; ++z)
+    float offset = 0.02f;
+    for(int z = -sampleRadius; z <= sampleRadius; z++)
     {
-        for(int y = -sampleRadius; y <= sampleRadius; ++y)
+        for(int y = -sampleRadius; y <= sampleRadius; y++)
         {
-            for(int x = -sampleRadius; x <= sampleRadius; ++x)
+            for(int x = -sampleRadius; x <= sampleRadius; x++)
             {
-                float closestDepth = texture(shadowCubeMap, fragToLight + vec3(x, y, z) * pixelSize).r;
+                float closestDepth = texture(shadowCubeMap, fragToLight + vec3(x, y, z) * offset).r;
                 closestDepth *= farPlane;
                 if(currentDepth > closestDepth + bias)
                 {
@@ -74,6 +71,8 @@ vec4 PointLight()
             }
         }
     }
+
+    shadow /= pow((sampleRadius * 2 + 1), 3);
 
     return (texture(diffuse0, textureCoord) * (diffuse * (1.0f - shadow) * inten + ambient) + texture(specular0, textureCoord).r * specular * (1.0f - shadow) * inten) * _lightColor;
 }
