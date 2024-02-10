@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Graphics\ShadowMap.cpp" />
     <ClCompile Include="Src\Graphics\ObjectTypes\SpotLight.cpp" />
     <ClCompile Include="Src\Graphics\SkyBox.cpp" />
     <ClCompile Include="Src\Graphics\FrameBuffer.cpp" />
@@ -175,6 +176,7 @@
     <ClCompile Include="Src\Tools\UniformHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Graphics\ShadowMap.h" />
     <ClInclude Include="Src\Graphics\ObjectTypes\SpotLight.h" />
     <ClInclude Include="Src\Graphics\SkyBox.h" />
     <ClInclude Include="Src\Graphics\FrameBuffer.h" />

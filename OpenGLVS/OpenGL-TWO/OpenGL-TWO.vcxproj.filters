@@ -55,6 +55,9 @@
     <ClCompile Include="Src\Graphics\ObjectTypes\SpotLight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Graphics\ShadowMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Graphics\Shader.h" />
@@ -70,5 +73,6 @@
     <ClInclude Include="Src\Graphics\FrameBuffer.h" />
     <ClInclude Include="Src\Graphics\SkyBox.h" />
     <ClInclude Include="Src\Graphics\ObjectTypes\SpotLight.h" />
+    <ClInclude Include="Src\Graphics\ShadowMap.h" />
   </ItemGroup>
 </Project>

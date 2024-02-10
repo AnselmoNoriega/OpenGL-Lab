@@ -4,6 +4,7 @@
 #include "Shader.h"
 #include "Model.h"
 #include "SpotLight.h"
+#include "ShadowMap.h"
 
 class Camera;
 
@@ -31,23 +32,11 @@ public:
 	);
 
 private:
-	Model mLightObj;
-	Shader mLightShader;
-
-	SpotLight mSpotLight;
-
 	Shader mShader;
 	Shader mShadowMapShader;
 	std::vector<Model> mModels;
 	std::vector<Model> mFlatModels;
 
-	glm::mat4 lightProj;
-	unsigned int mShadowMap;
-	unsigned int mShadowMapTex;
-
-	unsigned int mShadowMapWidth;
-	unsigned int mShadowMapHeight;
-
-	float farPlane;
+	ShadowMap mShadowMap;
 };
 
