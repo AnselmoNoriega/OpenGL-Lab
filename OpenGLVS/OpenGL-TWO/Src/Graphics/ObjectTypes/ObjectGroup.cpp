@@ -5,7 +5,7 @@
 ObjectGroup::ObjectGroup(const char* shaderFolder) :
 	mShader(shaderFolder), mShadowMapShader("ShadowMap")
 {
-	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec4 lightColor = glm::vec4(100.0f, 100.0f, 100.0f, 1.0f);
 	glm::vec3 lightPos = glm::vec3(10.0f, 13.0f, 0.5f);
 
 	mShader.UseProgram();

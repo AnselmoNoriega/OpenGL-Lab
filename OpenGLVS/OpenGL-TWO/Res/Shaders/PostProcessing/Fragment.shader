@@ -36,6 +36,10 @@ uniform float gamma;
 
 void main()
 {
-	vec4 frag = texture(screenTexture, textureCoord);
-	FragColor.rgb = pow(frag.rgb, vec3(1.0f / gamma));
+	vec3 frag = texture(screenTexture, textureCoord).rgb;
+
+	float exposure = 0.1f;
+	vec3 toneMapped = vec3(1.0f) - exp(-frag * exposure);
+	
+	FragColor.rgb = pow(toneMapped, vec3(1.0f / gamma));
 }
